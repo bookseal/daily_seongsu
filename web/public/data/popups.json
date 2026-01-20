@@ -1,0 +1,52 @@
+[
+  {
+    "id": "popup_0",
+    "title": "Tamburins Perfume Exhibition",
+    "description": "Experience the new Tamburins Perfume Exhibition in the heart of Seongsu.",
+    "image_url": "https://placehold.co/600x400/png?text=Tamburins",
+    "start_date": "2026-01-16",
+    "end_date": "2026-01-30",
+    "location": "Seongsu-dong 2-ga, Seongdong-gu, Seoul",
+    "source": "Instagram"
+  },
+  {
+    "id": "popup_1",
+    "title": "Dior Seongsu Pop-up",
+    "description": "Experience the new Dior Seongsu Pop-up in the heart of Seongsu.",
+    "image_url": "https://placehold.co/600x400/png?text=Dior",
+    "start_date": "2026-01-18",
+    "end_date": "2026-01-27",
+    "location": "Seongsu-dong 2-ga, Seongdong-gu, Seoul",
+    "source": "Instagram"
+  },
+  {
+    "id": "popup_2",
+    "title": "Musinsa Standard Pop-up",
+    "description": "Experience the new Musinsa Standard Pop-up in the heart of Seongsu.",
+    "image_url": "https://placehold.co/600x400/png?text=Musinsa",
+    "start_date": "2026-01-16",
+    "end_date": "2026-01-31",
+    "location": "Seongsu-dong 2-ga, Seongdong-gu, Seoul",
+    "source": "Instagram"
+  },
+  {
+    "id": "popup_3",
+    "title": "Gentle Monster Haus",
+    "description": "Experience the new Gentle Monster Haus in the heart of Seongsu.",
+    "image_url": "https://placehold.co/600x400/png?text=Gentle+Monster",
+    "start_date": "2026-01-18",
+    "end_date": "2026-02-01",
+    "location": "Seongsu-dong 2-ga, Seongdong-gu, Seoul",
+    "source": "Instagram"
+  },
+  {
+    "id": "popup_4",
+    "title": "Ader Error Space",
+    "description": "Experience the new Ader Error Space in the heart of Seongsu.",
+    "image_url": "https://placehold.co/600x400/png?text=Ader+Error",
+    "start_date": "2026-01-18",
+    "end_date": "2026-02-08",
+    "location": "Seongsu-dong 2-ga, Seongdong-gu, Seoul",
+    "source": "Instagram"
+  }
+]
