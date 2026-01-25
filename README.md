@@ -1,103 +1,121 @@
-# Daily Seongsu (성수역 혼잡도 예측 서비스) - Professional MLOps
+# Daily Seongsu (성수역 혼잡도 예측 서비스) - Professional MLOps Portfolio
 
-**Daily Seongsu** is an AI-powered service that predicts real-time crowding at Seongsu Station.
-It is built on a **Professional MLOps Pipeline** hosted on **OCI Ampere A1 (ARM64)**, utilizing **Supabase** for robust data storage and a **Dual-Frontend** strategy for service and education.
+**Target Goal**: 2027 Singapore Big Tech AI Logic / MLOps Engineer Recruitment.
 
-## System Architecture
+**Daily Seongsu** is an end-to-end AI service designed to predict real-time crowding at Seongsu Station. It demonstrates a **Professional MLOps Pipeline** integrating **Hybrid Cloud Infrastructure** (OCI + Supabase + Hugging Face) and a **Dual-Purpose UI** architecture.
+
+---
+
+## 🏗️ System Architecture: The "Hybrid Engine"
+
+We utilize a three-tier architecture to balance performance, scalability, and accessibility.
 
 ```mermaid
 graph TD
-    subgraph OCI_Ampere_A1 [OCI Ampere A1 Server (Ubuntu/Docker)]
+    subgraph Engine_Room [🛑 Engine Room (OCI Ampere A1)]
         Airflow[Apache Airflow <br> (Orchestrator)]
-        Dashboard[Streamlit <br> (Guidebook UI)]
-        ServiceUI[Gradio <br> (Prediction Service UI)]
-        MLflow[MLflow <br> (Experiment Tracking)]
-        
-        subgraph Containers
-            Crawler[Data Crawler]
-            Trainer[Model Trainer]
-        end
+        MLflow[MLflow <br> (Model Registry)]
+        Training[Model Training <br> (Heavy Compute)]
     end
-    
-    subgraph Data_Layer [Supabase (Cloud DB)]
-        Postgres[(PostgreSQL <br> Data Warehouse)]
+
+    subgraph Data_Layer [⚡ Data Layer (Supabase)]
+        Postgres[(PostgreSQL <br> Single Source of Truth)]
     end
+
+    subgraph Showroom [🎨 Showroom (Hugging Face Spaces)]
+        Gradio[Gradio Interface <br> (Guidebook & Service UI)]
+    end
+
+    External[External APIs <br> (Seoul Data / KMA)] -->|Raw Data| Airflow
+    Airflow -->|Upsert Data| Postgres
+    Postgres -->|Fetch Training Data| Training
+    Training -->|Log Metrics| MLflow
+    Training -->|Register Model| MLflow
+    MLflow -->|Deploy Model| Gradio
     
-    External[External APIs <br> (Seoul Data / KMA)] --> Crawler
-    Crawler -->|Insert Data| Postgres
-    Postgres -->|Fetch Data| Trainer
-    Trainer -->|Log Metrics| MLflow
-    Trainer -->|Save Model| Airflow
-    Airflow -->|Deploy Model| ServiceUI
-    
-    User((User)) --> ServiceUI
-    User --> Dashboard
+    User((Recruiter/User)) --> Gradio
+    Gradio -->|Query DB Status| Postgres
 ```
 
-## Professional MLOps Roadmap (Level 1 - 10)
+### 1. Engine Room (OCI Ampere A1)
+- **Role**: Heavy lifting and Orchestration.
+- **Components**: Apache Airflow (Dag Management), MLflow (Experiment Tracking), Docker Containers.
+- **Hardware**: Oracle Cloud Infrastructure (ARM64).
 
-### Level 1: Cloud Data Engineering (Supabase)
-- **Goal**: Replace local files with a robust cloud database.
-- **Action**: 
-  - Integrate **Supabase (PostgreSQL)**.
-  - Implement `SeoulSubwayCollector` and `WeatherCollector` to insert data directly into Supabase tables (`subway_traffic`, `weather_data`).
+### 2. Data Layer (Supabase)
+- **Role**: Serverless Relational Database (PostgreSQL).
+- **Features**: Robust `upsert` logic for data integrity, instant API generation.
 
-### Level 2: Data Warehouse & Preprocessing
-- **Goal**: scalable data processing.
-- **Action**: Use **Pandas** (or SQL within Supabase) to clean data, handle missing values, and generate features (e.g., Holidays, Weather Condition).
+### 3. Showroom (Hugging Face Spaces)
+- **Role**: Public-facing Interface & Social Proof.
+- **UI**: **Gradio** (Interactive MLOps Guidebook).
+- **Goal**: High availability for global access (Recruiters, Users).
 
-### Level 3: Dual-Frontend Deployment
-- **Goal**: Serve both end-users and developers.
+---
+
+## 🗺️ MLOps Roadmap (Level 1 - 10)
+
+### 🟢 Level 1: Cloud Data Engineering (COMPLETE)
+- **Objective**: Establish a robust data pipeline replacing local files.
+- **Tech Stack**: Python (Crawler), **Supabase (PostgreSQL)**, OCI.
+- **Key Achievements**:
+    - Migrated connection logic from `crawler/storage.py` (Local JSON) to `crawler/storage_supabase.py` (Cloud DB).
+    - Implemented **Upsert Strategy** (Insert on Conflict Update) to prevent duplicate records.
+    - Secured API Keys using `.env` environment variables.
+
+### 🟡 Level 2: Data Warehouse & Preprocessing (TODO)
+- **Objective**: Create a clean, ML-ready dataset.
+- **Action**: Use Pandas to handle missing values and feature engineering (e.g., *IsHoliday*, *RainCondition*) directly from Supabase.
+
+### ⚪ Level 3: Dual-Purpose UI (Interactive Guidebook)
+- **Objective**: Pivot to **Gradio** for a unified experience.
 - **Action**:
-  - **Gradio (Service)**: Lightweight, high-performance interface for real-time crowding prediction.
-  - **Streamlit (Guidebook)**: Interactive educational hub showing the MLOps pipeline status and project docs.
+    - **Service**: Real-time crowding prediction interface.
+    - **Guidebook**: Interactive education hub where users can trigger API calls (`verify_apis.py`) and view live DB changes.
 
-### Level 4: AutoML & Hyperparameter Tuning
-- **Goal**: Maximize model performance.
-- **Action**: Use **PyCaret** or **Optuna** to automatically select the best model and tune hyperparameters.
+### ⚪ Level 4: AutoML & Hyperparameter Tuning
+- **Action**: Integrate **PyCaret** or **Optuna** for automated model selection and metric optimization.
 
-### Level 5: Containerization (Docker Compose)
-- **Goal**: Infrastructure as Code & Portability.
-- **Action**: Define the entire stack (Airflow, MLflow, Gradio, Streamlit) in `docker-compose.yml` optimized for ARM64.
+### ⚪ Level 5: Infrastructure as Code (Docker)
+- **Action**: Full containerization of the Engine Room using `docker-compose.yml` optimized for ARM64 architecture.
 
-### Level 6: CI/CD (GitHub Actions)
-- **Goal**: Automated testing and deployment.
-- **Action**: GitHub Actions pipeline to run tests, build Docker images, and deploy to OCI upon push.
+### ⚪ Level 6: CI/CD Pipeline
+- **Action**: GitHub Actions workflow to run unit tests and auto-deploy to OCI on push.
 
-### Level 7: Experiment Tracking (MLflow)
-- **Goal**: Reproducibility and Metric Tracking.
-- **Action**: centralized **MLflow** server to log parameters, metrics (RMSE), and artifacts for every training run.
+### ⚪ Level 7: Experiment Tracking (MLflow)
+- **Action**: Centralized logging of RMSE/MAE metrics and model artifacts.
 
-### Level 8: Data Versioning (DVC)
-- **Goal**: Version control for large datasets.
-- **Action**: Integrate **DVC** to track changes in the dataset alongside codegit.
+### ⚪ Level 8: Data Versioning (DVC)
+- **Action**: Version control for large datasets alongside Git code history.
 
-### Level 9: Monitoring & Alerting
-- **Goal**: Proactive system health checks.
-- **Action**: Prometheus/Grafana or simple Python-based alerts (Telegram/Slack) for pipeline failures or model drift.
+### ⚪ Level 9: System Observability
+- **Action**: Expose system health logs (Airflow status, API Latency) directly on the **Gradio UI** for transparency.
 
-### Level 10: Orchestration (Apache Airflow)
-- **Goal**: Fully automated, dependency-aware workflows.
-- **Action**: Replace cron with **Apache Airflow** DAGs to manage the complex dependencies of the entire lifecycle (Ingest -> Train -> Deploy).
+### ⚪ Level 10: Full Orchestration (Airflow)
+- **Action**: Replace cron jobs with dependency-aware Airflow DAGs for the complete Data->Train->Deploy lifecycle.
 
-## Infrastructure Setup (ARM64)
+---
 
-### Prerequisites
-- OCI Ampere A1 Instance
-- Ports: 80, 443, 8501 (Streamlit), 7860 (Gradio), 8080 (Airflow), 5000 (MLflow)
+## 🚀 Quick Start (Level 1)
 
-### Setup
-Scripts in `infra/` help bootstrap the server.
+### 1. Environment Setup
+Create a `.env` file in `crawler/`:
 ```bash
-./infra/setup_arm64.sh  # Install Docker/Python
-./infra/setup_network.sh # Configure Firewall
+SEOUL_DATA_API_KEY=your_key
+KMA_API_KEY=your_key
+SUPABASE_URL=your_url
+SUPABASE_KEY=your_service_role_key
 ```
 
-## Running the Crawler (Migration to Supabase)
-Ensure `.env` contains Supabase credentials (`SUPABASE_URL`, `SUPABASE_KEY`).
-
+### 2. Run the Interactive Guidebook
 ```bash
-cd crawler
-pip install -r requirements.txt
-python main.py
+# Install dependencies
+pip install -r crawler/requirements.txt
+
+# Launch Gradio App
+python guidebook/gradio_app.py
 ```
+Access the guide at `http://localhost:7860`.
+
+---
+*Last Updated: Jan 2026 | Maintainer: Daily Seongsu Team*
