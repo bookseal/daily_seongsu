@@ -1,8 +1,26 @@
 import os
 import requests
 from dotenv import load_dotenv
+from .storage_supabase import SupabaseStorage
 
 load_dotenv()
+
+def verify_supabase_connection():
+    print("\n[3] Testing Supabase Connection...")
+    try:
+        storage = SupabaseStorage()
+        if not storage.client:
+            print("❌ FAILED: Client init failed.")
+            return False
+        
+        # Lightweight query to check connection
+        # Checking 'weather_data' existance by selecting 1 row
+        storage.client.table("weather_data").select("count", count="exact").limit(1).execute()
+        print("✅ SUCCESS: Connected to Supabase.")
+        return True
+    except Exception as e:
+        print(f"❌ FAILED: Supabase Error - {e}")
+        return False
 
 def verify_seoul_data():
     print("\n[1] Testing Seoul Data API Key...")
@@ -87,10 +105,12 @@ def verify_kma_data():
         return False
 
 if __name__ == "__main__":
-    print("=== DATA API VERIFICATION TOOL (Seoul & KMA) ===")
+    print("=== DATA API VERIFICATION TOOL (Seoul & KMA & Supabase) ===")
     v1 = verify_seoul_data()
     v2 = verify_kma_data()
+    v3 = verify_supabase_connection()
     
     print("\n=== SUMMARY ===")
     print(f"Seoul Subway: {'✅ OK' if v1 else '❌ FAIL'}")
     print(f"KMA Weather : {'✅ OK' if v2 else '❌ FAIL'}")
+    print(f"Supabase    : {'✅ OK' if v3 else '❌ FAIL'}")

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 # Path setup
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from crawler.verify_apis import verify_seoul_data, verify_kma_data
+from crawler.verify_apis import verify_seoul_data, verify_kma_data, verify_supabase_connection
 from crawler.storage_supabase import SupabaseStorage
 
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'crawler', '.env'))
@@ -15,17 +15,28 @@ load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'crawler', 
 def check_apis():
     res_seoul = verify_seoul_data()
     res_kma = verify_kma_data()
-    return f"SEOUL: {'✅' if res_seoul else '❌'}\nKMA: {'✅' if res_kma else '❌'}"
+    res_supa = verify_supabase_connection()
+    
+    status = f"SEOUL: {'✅' if res_seoul else '❌'}\n"
+    status += f"KMA: {'✅' if res_kma else '❌'}\n"
+    status += f"SUPABASE: {'✅' if res_supa else '❌'}"
+    return status
 
 def fetch_db_data():
     try:
         storage = SupabaseStorage()
-        if not storage.client: return "DB Error", "Check .env"
+        if not storage.client: 
+            err = pd.DataFrame({"Error": ["Supabase not connected"]})
+            return err, err
+
         res_sub = storage.client.table("subway_traffic").select("*").limit(5).order("date", desc=True).execute()
         res_wea = storage.client.table("weather_data").select("*").limit(5).order("measured_at", desc=True).execute()
-        return (pd.DataFrame(res_sub.data) if res_sub.data else pd.DataFrame(["No Data"])), \
-               (pd.DataFrame(res_wea.data) if res_wea.data else pd.DataFrame(["No Data"]))
-    except Exception as e: return str(e), str(e)
+        
+        return (pd.DataFrame(res_sub.data) if res_sub.data else pd.DataFrame({"Status": ["No Data"]})), \
+               (pd.DataFrame(res_wea.data) if res_wea.data else pd.DataFrame({"Status": ["No Data"]}))
+    except Exception as e:
+        err_df = pd.DataFrame({"Error": [str(e)]})
+        return err_df, err_df
 
 def read_code(filename):
     try:
@@ -61,6 +72,10 @@ graph LR
     Request --> Parse{"Valid JSON?"}
     Parse -->|Yes| OK["✅ Success"]
     Parse -->|No| Fail["❌ Error"]
+    
+    OK --> SupaCheck{"Supabase Connection?"}
+    SupaCheck -->|Yes| SupaOK["✅ DB Connected"]
+    SupaCheck -->|No| SupaFail["❌ DB Error"]
 </div>
 """
 
