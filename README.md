@@ -12,17 +12,17 @@ We utilize a three-tier architecture to balance performance, scalability, and ac
 
 ```mermaid
 graph TD
-    subgraph Engine_Room [🛑 Engine Room (OCI Ampere A1)]
+    subgraph Engine_Room ["🛑 Engine Room (OCI Ampere A1)"]
         Airflow[Apache Airflow <br> (Orchestrator)]
         MLflow[MLflow <br> (Model Registry)]
         Training[Model Training <br> (Heavy Compute)]
     end
 
-    subgraph Data_Layer [⚡ Data Layer (Supabase)]
+    subgraph Data_Layer ["⚡ Data Layer (Supabase)"]
         Postgres[(PostgreSQL <br> Single Source of Truth)]
     end
 
-    subgraph Showroom [🎨 Showroom (Hugging Face Spaces)]
+    subgraph Showroom ["🎨 Showroom (Hugging Face Spaces)"]
         Gradio[Gradio Interface <br> (Guidebook & Service UI)]
     end
 
