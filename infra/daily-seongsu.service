@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily Seongsu Gradio Service
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/workspace/daily_seongsu
+ExecStart=/usr/bin/python3 guidebook/gradio_app.py --demo-name daily_seongsu
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

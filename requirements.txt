@@ -2,6 +2,10 @@ requests==2.31.0
 beautifulsoup4==4.12.2
 playwright==1.40.0
 pandas
-python-dotenv==1.0.0
+python-dotenv
+pandas
+requests
+gradio
 supabase
+holidays>=0.40
 gradio

@@ -3,7 +3,9 @@ import requests
 from dotenv import load_dotenv
 from .storage_supabase import SupabaseStorage
 
-load_dotenv()
+# Ensure we load .env from the crawler directory
+env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+load_dotenv(env_path)
 
 def verify_supabase_connection():
     print("\n[3] Testing Supabase Connection...")

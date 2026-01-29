@@ -4,7 +4,9 @@ import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
+# Ensure we load .env from the crawler directory
+env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+load_dotenv(env_path)
 
 class SeoulSubwayCollector:
     """
@@ -55,9 +57,18 @@ class SeoulSubwayCollector:
             
             if "CardSubwayStatsNew" in data and "row" in data["CardSubwayStatsNew"]:
                 rows = data["CardSubwayStatsNew"]["row"]
-                # Filter for Seongsu station (Line 2)
-                # Note: Station names might be Korean "성수"
-                seongsu_data = [row for row in rows if row["SUB_STA_NM"] == "성수" and row["LINE_NUM"] == "2호선"]
+                # Filter for Seongsu station (Line 2) and map to expected keys
+                seongsu_data = []
+                for row in rows:
+                    # New API Keys: SBWY_STNS_NM (Station), SBWY_ROUT_LN_NM (Line)
+                    if row.get("SBWY_STNS_NM") == "성수" and row.get("SBWY_ROUT_LN_NM") == "2호선":
+                        seongsu_data.append({
+                            "USE_DT": row.get("USE_YMD"),
+                            "SUB_STA_NM": row.get("SBWY_STNS_NM"),
+                            "LINE_NUM": row.get("SBWY_ROUT_LN_NM"),
+                            "RIDE_PASGR_NUM": row.get("GTON_TNOPE"),
+                            "ALIGHT_PASGR_NUM": row.get("GTOFF_TNOPE")
+                        })
                 return seongsu_data
             return []
         except Exception as e:

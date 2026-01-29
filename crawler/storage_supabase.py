@@ -1,5 +1,6 @@
 import os
 from supabase import create_client, Client
+import pandas as pd
 
 class SupabaseStorage:
     def __init__(self):
@@ -119,3 +120,50 @@ class SupabaseStorage:
             
         except Exception as e:
             print(f"Error parsing or saving weather data to Supabase: {e}")
+    def fetch_all_subway_data(self):
+        """
+        Fetches all records from 'subway_traffic' table.
+        """
+        if not self.client:
+            print("Supabase client not initialized.")
+            return []
+
+        try:
+            # Need to paginate if > 1000 rows. Supabase limit defaults to 1000.
+            # For now, let's try to fetch a reasonably large limit or implement Loop.
+            # OCI free tier might be slow, but let's just fetch 10000 for verified portfolio.
+            response = self.client.table("subway_traffic").select("*").range(0, 9999).execute()
+            data = response.data
+            return data
+        except Exception as e:
+            print(f"Error fetching all subway data: {e}")
+            return []
+    def save_model_features(self, df):
+        """
+        Upserts processed features to 'model_features' table.
+        Expects a pandas DataFrame.
+        """
+        if not self.client:
+            print("Supabase client not initialized.")
+            return
+
+        print(f"💾 Upserting {len(df)} feature rows to Supabase...")
+        
+        # Convert DF to list of dicts
+        # Handle nan/inf for JSON compliance if needed? Pandas to_dict usually handles it but json.dumps might choke on NaN.
+        # Supabase/PostgREST usually prefers null for NaN.
+        df_clean = df.where(pd.notnull(df), None)
+        records = df_clean.to_dict(orient='records')
+        
+        # Batch insert to avoid payload limits
+        batch_size = 1000
+        for i in range(0, len(records), batch_size):
+            batch = records[i:i+batch_size]
+            try:
+                self.client.table("model_features").upsert(batch, on_conflict="date").execute()
+                print(f"   - Saved batch {i} ~ {i+len(batch)}")
+            except Exception as e:
+                print(f"❌ Error saving batch {i}: {e}")
+                if "relation" in str(e) and "does not exist" in str(e):
+                    print("⚠️ Table 'model_features' does not exist. Please run the SQL script.")
+                    return
