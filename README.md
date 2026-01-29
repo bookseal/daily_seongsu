@@ -63,9 +63,16 @@ graph TD
     - Implemented **Upsert Strategy** (Insert on Conflict Update) to prevent duplicate records.
     - Secured API Keys using `.env` environment variables.
 
-### 🟡 Level 2: Data Warehouse & Preprocessing (TODO)
-- **Objective**: Create a clean, ML-ready dataset.
-- **Action**: Use Pandas to handle missing values and feature engineering (e.g., *IsHoliday*, *RainCondition*) directly from Supabase.
+### 🟢 Level 2: Data Preprocessing & Feature Engineering (COMPLETE)
+- **Objective**: Transform raw logs into high-quality, ML-ready features.
+- **Components**: `pipeline.py`, `features.py`.
+- **Key Achievements**:
+    - **Feature Store**: Created `model_features` table in Supabase acting as the bridge between Engineering and ML.
+    - **Advanced Engineering**:
+        - **Lag Features**: `t-1` (Daily), `t-7` (Weekly), `t-364` (Yearly Seasonality).
+        - **Rolling Windows**: 7-day moving averages to capture trends.
+        - **Calendar**: `IsWeekend`, `IsHoliday` (Korean Holidays).
+    - **Verification**: Implemented automated integrity checks ensuring 0 Nulls and valid ranges before upload.
 
 ### ⚪ Level 3: Dual-Purpose UI (Interactive Guidebook)
 - **Objective**: Pivot to **Gradio** for a unified experience.
