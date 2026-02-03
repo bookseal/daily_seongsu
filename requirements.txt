@@ -3,9 +3,7 @@ beautifulsoup4==4.12.2
 playwright==1.40.0
 pandas
 python-dotenv
-pandas
-requests
 gradio
 supabase
 holidays>=0.40
-gradio
+plotly
