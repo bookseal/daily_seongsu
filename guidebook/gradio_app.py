@@ -9,9 +9,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from crawler.pipeline import DataPipeline
 from guidebook.tabs.intro import create_intro_tab
-from guidebook.tabs.pipeline_controls import create_pipeline_controls
+from guidebook.tabs.pipeline_controls import create_level1_controls, create_level2_controls
 from guidebook.tabs.step11_observer import create_observer_tab
-from guidebook.tabs.step12_sandbox import create_sandbox_tab
+from guidebook.tabs.step14_automl import create_automl_tab
+from guidebook.tabs.step15_docker import create_docker_tab
 from guidebook.tabs.step13_14_control import create_control_tab
 
 # Instantiate Pipeline (Stateful - Shared across tabs)
@@ -35,7 +36,7 @@ function() {
     indicator.style.top = '20px';
     indicator.style.right = '20px';
     indicator.style.padding = '8px 16px';
-    indicator.style.background = 'rgba(31, 41, 55, 0.8)'; // Dark gray with opacity
+    indicator.style.background = 'rgba(31, 41, 55, 0.8)';
     indicator.style.color = '#e5e7eb';
     indicator.style.borderRadius = '9999px';
     indicator.style.zIndex = '9999';
@@ -55,11 +56,9 @@ function() {
         let currentSection = 'Overview';
         let found = false;
 
-        // Find the last heading that is above the viewport center or top
         for (let i = 0; i < headings.length; i++) {
             const h = headings[i];
             const rect = h.getBoundingClientRect();
-            // Trigger line: 200px from top
             if (rect.top < 200) {
                 if (h.innerText.includes('Level') || h.innerText.includes('Daily Seongsu')) {
                     currentSection = h.innerText.split(':')[0].trim();
@@ -70,13 +69,30 @@ function() {
 
         indicator.innerText = currentSection;
         
-        // Show/Hide logic
         if (window.scrollY > 100) {
             indicator.style.opacity = '1';
         } else {
             indicator.style.opacity = '0';
         }
     });
+
+    // 3. Global Tab Switcher
+    window.switchTab = (phaseId, levelId) => {
+        console.log("Switching to:", phaseId, levelId);
+        
+        const pBtn = document.getElementById(phaseId + '-button');
+        if(pBtn) {
+            pBtn.click();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        if(levelId) {
+            setTimeout(() => {
+                const lBtn = document.getElementById(levelId + '-button');
+                if(lBtn) lBtn.click();
+            }, 150);
+        }
+    }
 }
 """
 
@@ -106,47 +122,137 @@ MERMAID_SCRIPT = """
         renderMermaid();
     });
     
-    // Fallback polling
     setInterval(renderMermaid, 500);
 </script>
 """
 
 with gr.Blocks(title="Daily Seongsu Guidebook", head=MERMAID_SCRIPT, js=JS_DARK_MODE, theme=gr.themes.Soft()) as app:
-    # Custom Divider
     def divider(margin="24px"):
         return gr.HTML(f'<hr style="border: none; border-top: 1px solid #4b5563; margin: {margin} 0;">')
 
     
-    # Roadmap (Brief)
-    # TABS STRUCTURE - Organized by Phases
     with gr.Tabs():
         # TAB 1: Dashboard
         create_intro_tab()
 
-        # TAB 2: Phase 1 (Foundation)
-        with gr.Tab("🏗️ Phase 1: Foundation"):
+        # ============================================
+        # PHASE 1: FOUNDATION (Levels 1-3)
+        # ============================================
+        with gr.Tab("🏗️ Building the Data Engine", elem_id="tab-p1"):
             gr.Markdown("## Phase 1: Building the Data Engine")
+            gr.Markdown("*Levels 1-3: From raw data collection to feature quality assurance.*")
+            
             with gr.Tabs():
-                with gr.Tab("Level 1-2: Pipeline Control"):
-                    create_pipeline_controls(pipeline)
-                with gr.Tab("Level 3 (Step 11): Feature Observer"):
+                # Level 1: Cloud Data Engineering
+                with gr.Tab("L1: Data Engineering", elem_id="tab-l1"):
+                    gr.Markdown("## 🔵 Level 1: Cloud Data Engineering")
+                    create_level1_controls(pipeline)
+                
+                # Level 2: Preprocessing
+                with gr.Tab("L2: Preprocessing", elem_id="tab-l2"):
+                    gr.Markdown("## 🔵 Level 2: Preprocessing Pipeline")
+                    create_level2_controls(pipeline)
+                
+                # Level 3: Data Quality
+                with gr.Tab("L3: Data Quality", elem_id="tab-l3"):
+                    gr.Markdown("## 🔵 Level 3: Data Quality Assurance")
                     create_observer_tab()
 
-        # TAB 3: Phase 2 (Acceleration)
-        with gr.Tab("🚀 Phase 2: Acceleration"):
+        # ============================================
+        # PHASE 2: ACCELERATION (Levels 4-6)
+        # ============================================
+        with gr.Tab("🚀 Automating Intelligence", elem_id="tab-p2"):
             gr.Markdown("## Phase 2: Automating Intelligence")
+            gr.Markdown("*Levels 4-6: From model training to automated deployment.*")
+            
             with gr.Tabs():
-                with gr.Tab("Level 3 (Step 12): Simulation Sandbox"):
-                    create_sandbox_tab()
-                with gr.Tab("Level 3 & 4 (Step 13): Training Control"):
+                # Level 4: AutoML
+                with gr.Tab("L4: AutoML", elem_id="tab-l4"):
+                    gr.Markdown("## 🟣 Level 4: AutoML")
+                    create_automl_tab()
+                
+                # Level 5: Docker
+                with gr.Tab("L5: Docker", elem_id="tab-l5"):
+                    gr.Markdown("## 🟣 Level 5: Infrastructure as Code")
+                    create_docker_tab()
+                
+                # Level 6: CI/CD
+                with gr.Tab("L6: CI/CD", elem_id="tab-l6"):
+                    gr.Markdown("## 🟣 Level 6: CI/CD Pipeline")
+                    gr.Markdown("""
+                    > **Goal**: Automate testing and deployment with GitHub Actions.
+                    
+                    | Step | Description | Status |
+                    |------|-------------|--------|
+                    | 6.1 | GitHub Actions Basics | ⚪ Planned |
+                    | 6.2 | Automated Testing | ⚪ Planned |
+                    | 6.3 | Auto-Deploy to Production | ⚪ Planned |
+                    """)
                     create_control_tab()
 
-        # TAB 4: Phase 3 (Operation)
-        with gr.Tab("⚙️ Phase 3: Operation"):
-            gr.Markdown("## Phase 3: Reliability at Scale (Coming Soon)")
-            gr.Info("Levels 7-10 (MLflow, DVC, Airflow) are currently under development.")
-            # Placeholder or move Governance here if desired. 
-            # For now, Governance is inside Control Room (Phase 2).
+        # ============================================
+        # PHASE 3: OPERATION (Levels 7-10)
+        # ============================================
+        with gr.Tab("⚙️ Reliability at Scale", elem_id="tab-p3"):
+            gr.Markdown("## Phase 3: Reliability at Scale")
+            gr.Markdown("*Levels 7-10: From experiment tracking to full orchestration.*")
+            
+            with gr.Tabs():
+                # Level 7: MLflow
+                with gr.Tab("L7: MLflow", elem_id="tab-l7"):
+                    gr.Markdown("## 🟢 Level 7: Experiment Tracking")
+                    gr.Markdown("""
+                    > **Goal**: Track experiments, log metrics, and manage model versions.
+                    
+                    | Step | Description | Status |
+                    |------|-------------|--------|
+                    | 7.1 | MLflow Setup | ⚪ Planned |
+                    | 7.2 | Metric Logging | ⚪ Planned |
+                    | 7.3 | Model Registry | ⚪ Planned |
+                    """)
+                    gr.Info("🚧 Coming Soon: Centralized logging of model metrics and artifacts.")
+                
+                # Level 8: DVC
+                with gr.Tab("L8: DVC", elem_id="tab-l8"):
+                    gr.Markdown("## 🟢 Level 8: Data Versioning")
+                    gr.Markdown("""
+                    > **Goal**: Version control for datasets, just like Git for code.
+                    
+                    | Step | Description | Status |
+                    |------|-------------|--------|
+                    | 8.1 | DVC Init | ⚪ Planned |
+                    | 8.2 | Remote Storage Link | ⚪ Planned |
+                    | 8.3 | Dataset History Tracking | ⚪ Planned |
+                    """)
+                    gr.Info("🚧 Coming Soon: Tracking large datasets alongside code changes.")
+                
+                # Level 9: Observability
+                with gr.Tab("L9: Observability", elem_id="tab-l9"):
+                    gr.Markdown("## 🟢 Level 9: System Observability")
+                    gr.Markdown("""
+                    > **Goal**: Monitor system health, set up alerts, and track latency.
+                    
+                    | Step | Description | Status |
+                    |------|-------------|--------|
+                    | 9.1 | Health Check API | ⚪ Planned |
+                    | 9.2 | Alerting (Telegram/Slack) | ⚪ Planned |
+                    | 9.3 | Latency Dashboard | ⚪ Planned |
+                    """)
+                    gr.Info("🚧 Coming Soon: Real-time monitoring of API latency and system health.")
+                
+                # Level 10: Airflow
+                with gr.Tab("L10: Airflow", elem_id="tab-l10"):
+                    gr.Markdown("## 🟢 Level 10: Orchestration")
+                    gr.Markdown("""
+                    > **Goal**: Manage complex multi-step workflows with Airflow DAGs.
+                    
+                    | Step | Description | Status |
+                    |------|-------------|--------|
+                    | 10.1 | Airflow DAG Design | ⚪ Planned |
+                    | 10.2 | Task Dependencies | ⚪ Planned |
+                    | 10.3 | Full Lifecycle Automation | ⚪ Planned |
+                    """)
+                    gr.Info("🚧 Coming Soon: Complex dependency management for the full ML lifecycle.")
 
 
     gr.Markdown("<br><br><br>")
