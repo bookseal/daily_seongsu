@@ -33,7 +33,7 @@ function() {
     const indicator = document.createElement('div');
     indicator.id = 'level-indicator';
     indicator.style.position = 'fixed';
-    indicator.style.top = '20px';
+    indicator.style.bottom = '20px';
     indicator.style.right = '20px';
     indicator.style.padding = '8px 16px';
     indicator.style.background = 'rgba(31, 41, 55, 0.8)';

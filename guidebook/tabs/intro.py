@@ -14,9 +14,9 @@ def create_intro_tab():
                     End-to-end MLOps Portfolio: From raw data to real-time service.
                 </p>
                 <div style="margin-top: 20px;">
-                    <span style="background-color: #d1fae5; color: #065f46; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; margin: 0 5px;">OCI Ampere A1</span>
-                    <span style="background-color: #bfdbfe; color: #1e40af; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; margin: 0 5px;">Supabase</span>
-                    <span style="background-color: #fce7f3; color: #9d174d; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; margin: 0 5px;">Hugging Face</span>
+                    <span style="background-color: #d1fae5; color: #065f46; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; margin: 0 5px; white-space: nowrap;">OCI Ampere A1</span>
+                    <span style="background-color: #bfdbfe; color: #1e40af; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; margin: 0 5px; white-space: nowrap;">Supabase</span>
+                    <span style="background-color: #fce7f3; color: #9d174d; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; margin: 0 5px; white-space: nowrap;">Hugging Face</span>
                 </div>
             </div>
             """
