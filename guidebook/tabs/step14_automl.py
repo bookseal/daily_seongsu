@@ -37,7 +37,7 @@ def create_automl_tab():
     btn_prepare = gr.Button("📦 Load & Split Data", variant="secondary")
     with gr.Row():
         data_stats = gr.Textbox(label="Dataset Statistics", lines=5)
-        split_preview = gr.Dataframe(label="Sample (First 5 rows)", height=200)
+        split_preview = gr.Dataframe(label="Sample (First 5 rows)", max_height=200)
     
     def prepare_data():
         logs = []
@@ -94,7 +94,7 @@ def create_automl_tab():
     
     btn_compare = gr.Button("🚀 Train & Compare Models", variant="primary")
     with gr.Row():
-        model_results = gr.Dataframe(label="Model Comparison Results", height=200)
+        model_results = gr.Dataframe(label="Model Comparison Results", max_height=200)
         comparison_chart = gr.Plot(label="RMSE Comparison")
     
     def train_and_compare():

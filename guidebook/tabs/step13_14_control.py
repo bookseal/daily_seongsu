@@ -4,8 +4,9 @@ import time
 
 def create_control_tab():
     with gr.Group(elem_id="step-13-14"):
-        gr.Markdown("## 🎛️ Step 13/14: Pipeline Control Room")
-        gr.Markdown("## 🚂 Level 4 Trigger: AutoML Training & Governance")
+        gr.Markdown("## 🟡 Level 4: AutoML & Governance")
+        gr.Markdown("---")
+        gr.Markdown("### Step 13: Pipeline Control Room (AutoML Training)")
         
         # --- Step 13: Control Room ---
         with gr.Row():
@@ -31,7 +32,7 @@ def create_control_tab():
         gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
         
         # --- Step 14: Governance ---
-        gr.Markdown("## 📦 Step 14: Model Registry (Governance)")
+        gr.Markdown("### Step 14: Model Registry (Governance)")
         gr.Markdown("**Goal**: 모델의 버전 이력(Lineage)과 배포 상태를 관리합니다.")
         
         # Mock Registry Data

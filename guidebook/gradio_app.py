@@ -76,7 +76,71 @@ function() {
         }
     });
 
-    // 3. Global Tab Switcher
+    // 3. URL <-> Tab Sync
+    const tabParentMap = {
+        'tab-l1': 'tab-p1', 'tab-l2': 'tab-p1', 'tab-l3': 'tab-p1',
+        'tab-l4': 'tab-p2', 'tab-l5': 'tab-p2', 'tab-l6': 'tab-p2',
+        'tab-l7': 'tab-p3', 'tab-l8': 'tab-p3', 'tab-l9': 'tab-p3', 'tab-l10': 'tab-p3'
+    };
+
+    const trackableTabs = [
+        'tab-p1', 'tab-p2', 'tab-p3',
+        'tab-l1', 'tab-l2', 'tab-l3', 'tab-l4', 'tab-l5', 'tab-l6', 'tab-l7', 'tab-l8', 'tab-l9', 'tab-l10'
+    ];
+
+    const updateUrlForTab = (tabId, push = true) => {
+        const nextHash = '#' + tabId;
+        if (window.location.hash === nextHash) return;
+        if (push) {
+            history.pushState(null, '', nextHash);
+        } else {
+            history.replaceState(null, '', nextHash);
+        }
+    };
+
+    const bindTabButtons = () => {
+        trackableTabs.forEach((tabId) => {
+            const btn = document.getElementById(tabId + '-button');
+            if (!btn || btn.dataset.urlBound === '1') return;
+            btn.dataset.urlBound = '1';
+            btn.addEventListener('click', () => updateUrlForTab(tabId, true));
+        });
+    };
+
+    const applyHashRoute = () => {
+        const tabId = window.location.hash.replace('#', '');
+        if (!tabId) return;
+
+        const parentId = tabParentMap[tabId];
+        if (parentId) {
+            const parentBtn = document.getElementById(parentId + '-button');
+            if (parentBtn) parentBtn.click();
+            setTimeout(() => {
+                const childBtn = document.getElementById(tabId + '-button');
+                if (childBtn) childBtn.click();
+            }, 120);
+            return;
+        }
+
+        const targetBtn = document.getElementById(tabId + '-button');
+        if (targetBtn) targetBtn.click();
+    };
+
+    const setupUrlSync = () => {
+        bindTabButtons();
+        applyHashRoute();
+
+        const tabObserver = new MutationObserver(() => bindTabButtons());
+        tabObserver.observe(document.body, { childList: true, subtree: true });
+
+        window.addEventListener('hashchange', () => {
+            applyHashRoute();
+        });
+    };
+
+    setupUrlSync();
+
+    // 4. Global Tab Switcher
     window.switchTab = (phaseId, levelId) => {
         console.log("Switching to:", phaseId, levelId);
         
@@ -91,7 +155,10 @@ function() {
                 const lBtn = document.getElementById(levelId + '-button');
                 if(lBtn) lBtn.click();
             }, 150);
+            updateUrlForTab(levelId, true);
+            return;
         }
+        updateUrlForTab(phaseId, true);
     }
 }
 """

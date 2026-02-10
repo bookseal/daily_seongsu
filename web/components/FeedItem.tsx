@@ -54,7 +54,7 @@ export default function FeedItem({ popup }: FeedItemProps) {
 				</div>
 
 				<p className="font-semibold text-sm mb-1">{popup.title}</p>
-				<p className="text-sm text-gray-800 line-clamp-2 mb-2">
+				<p className="text-sm text-gray-800 mb-2">
 					{popup.description}
 				</p>
 
