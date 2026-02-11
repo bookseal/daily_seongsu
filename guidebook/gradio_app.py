@@ -13,7 +13,7 @@ from guidebook.tabs.pipeline_controls import create_level1_controls, create_leve
 from guidebook.tabs.step11_observer import create_observer_tab
 from guidebook.tabs.step14_automl import create_automl_tab
 from guidebook.tabs.step15_docker import create_docker_tab
-from guidebook.tabs.step13_14_control import create_control_tab
+from guidebook.tabs.step16_cicd import create_cicd_tab
 
 # Instantiate Pipeline (Stateful - Shared across tabs)
 pipeline = DataPipeline()
@@ -246,16 +246,7 @@ with gr.Blocks(title="Daily Seongsu Guidebook", head=MERMAID_SCRIPT, js=JS_DARK_
                 # Level 6: CI/CD
                 with gr.Tab("L6: CI/CD", elem_id="tab-l6"):
                     gr.Markdown("## 🟣 Level 6: CI/CD Pipeline")
-                    gr.Markdown("""
-                    > **Goal**: Automate testing and deployment with GitHub Actions.
-                    
-                    | Step | Description | Status |
-                    |------|-------------|--------|
-                    | 6.1 | GitHub Actions Basics | ⚪ Planned |
-                    | 6.2 | Automated Testing | ⚪ Planned |
-                    | 6.3 | Auto-Deploy to Production | ⚪ Planned |
-                    """)
-                    create_control_tab()
+                    create_cicd_tab()
 
         # ============================================
         # PHASE 3: OPERATION (Levels 7-10)
