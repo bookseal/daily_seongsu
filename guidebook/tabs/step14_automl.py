@@ -203,7 +203,7 @@ def create_automl_tab():
     def hyperparameter_tuning():
         try:
             import plotly.graph_objects as go
-            from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+            from sklearn.ensemble import RandomForestRegressor
             from sklearn.model_selection import GridSearchCV
             from sklearn.metrics import mean_squared_error
             

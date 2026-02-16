@@ -47,7 +47,7 @@ def run_subway_backfill(start_date="20220101", end_date="20251231"):
                     storage.save_subway_data(data)
                     msg = f"✅ Saved {len(data)} rows"
                 else:
-                    msg = f"⚠️ No data"
+                    msg = "⚠️ No data"
             except Exception as e:
                 msg = f"❌ Error: {str(e)}"
             

@@ -1,8 +1,6 @@
 
 import requests
 import pandas as pd
-from datetime import datetime
-import time
 import os
 import sys
 
@@ -58,8 +56,10 @@ class OpenMeteoCollector:
             # Map rain_sum/snowfall_sum to precipitation_type (simplified)
             # PTY: 0=None, 1=Rain, 2=Rain/Snow, 3=Snow
             def determine_pty(row):
-                if row['snowfall_sum'] > 0: return 3 # Snow
-                if row['rain_sum'] > 0: return 1 # Rain
+                if row['snowfall_sum'] > 0:
+                    return 3 # Snow
+                if row['rain_sum'] > 0:
+                    return 1 # Rain
                 return 0 # None
             
             df['precipitation_type'] = df.apply(determine_pty, axis=1)
@@ -72,7 +72,8 @@ class OpenMeteoCollector:
             return pd.DataFrame()
 
     def save_to_supabase(self, df):
-        if df.empty: return False
+        if df.empty:
+            return False
         
         print(f"💾 Saving {len(df)} weather rows to Supabase...")
         records = []
@@ -124,9 +125,9 @@ def run_weather_backfill(start_date="20220101", end_date="20251231"):
             if success:
                 yield f"✅ Successfully saved {len(df_weather)} rows to 'weather_data' table.\n"
             else:
-                yield f"❌ Failed to save weather data to DB.\n"
+                yield "❌ Failed to save weather data to DB.\n"
         else:
-             yield f"⚠️ No weather data found for this period.\n"
+             yield "⚠️ No weather data found for this period.\n"
              
     except Exception as e:
         yield f"CRITICAL WEATHER ERROR: {str(e)}\n"

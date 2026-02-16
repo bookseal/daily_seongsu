@@ -52,7 +52,7 @@ class SupabaseStorage:
 
         try:
             # Upserting based on unique constraint (date, station, line)
-            response = self.client.table("subway_traffic").upsert(formatted_data, on_conflict="date, station_name, line_number").execute()
+            _ = self.client.table("subway_traffic").upsert(formatted_data, on_conflict="date, station_name, line_number").execute()
             print(f"Successfully saved {len(formatted_data)} records to Supabase (subway_traffic).")
         except Exception as e:
             print(f"Error saving subway data to Supabase: {e}")
@@ -115,8 +115,8 @@ class SupabaseStorage:
                 "humidity": humidity
             }
             
-            response = self.client.table("weather_data").insert(payload).execute()
-            print(f"Successfully saved weather data to Supabase (weather_data).")
+            _ = self.client.table("weather_data").insert(payload).execute()
+            print("Successfully saved weather data to Supabase (weather_data).")
             
         except Exception as e:
             print(f"Error parsing or saving weather data to Supabase: {e}")

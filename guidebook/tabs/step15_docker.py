@@ -1,5 +1,4 @@
 import gradio as gr
-import os
 
 def create_docker_tab():
     """Level 5: Infrastructure as Code (Docker)"""
@@ -57,7 +56,8 @@ docker-compose down
         try:
             with open(filename, "r") as f:
                 return f.read()
-        except: return "File not found"
+        except Exception:
+            return "File not found"
 
     with gr.Accordion("Dockerfile", open=False):
         gr.Code(read_file("Dockerfile"), language="dockerfile")

@@ -1,7 +1,6 @@
 
 import pandas as pd
 import holidays
-from datetime import datetime
 
 class FeatureEngineer:
     def __init__(self):

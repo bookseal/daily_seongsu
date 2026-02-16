@@ -1,7 +1,6 @@
 import gradio as gr
 import pandas as pd
 import os
-import sys
 from crawler.verify_apis import verify_seoul_data, verify_kma_data, verify_supabase_connection
 from crawler.storage_supabase import SupabaseStorage
 from crawler.backfill_subway import run_subway_backfill
@@ -57,7 +56,8 @@ def read_code(filename):
         base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         with open(os.path.join(base_path, filename), "r") as f:
             return f.read()
-    except: return "Error reading file"
+    except Exception:
+        return "Error reading file"
 
 # --- MERMAID & HTML CONSTANTS ---
 HTML_VERIFY_FLOW = """<div class="mermaid">

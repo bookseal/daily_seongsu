@@ -91,15 +91,15 @@ def verify_supabase():
         # Try a simple read (assuming table exists, or just checking auth by listing)
         # Supabase-py doesn't strictly validate on init, need to make a request.
         # We'll try to select from 'weather_data' (limit 1)
-        response = client.table("weather_data").select("*").limit(1).execute()
+        _ = client.table("weather_data").select("*").limit(1).execute()
         print("✅ SUCCESS: Connection established and query executed.")
         return True
     except Exception as e:
         msg = str(e)
         if "JWT" in msg or "Invalid API key" in msg or "401" in msg:
-             print(f"❌ FAILED: Authentication failed (Invalid Key).")
+             print("❌ FAILED: Authentication failed (Invalid Key).")
         elif "404" in msg:
-             print(f"⚠️ PARTIAL: Auth worked but table not found (Check schema).")
+             print("⚠️ PARTIAL: Auth worked but table not found (Check schema).")
              return True # Key is likely good, just schema missing
         else:
              print(f"❌ FAILED: {msg}")

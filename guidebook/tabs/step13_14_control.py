@@ -12,12 +12,12 @@ def create_control_tab():
         with gr.Row():
             with gr.Column():
                 gr.Markdown("### 1. Training Config")
-                chk_feats = gr.CheckboxGroup(
+                _ = gr.CheckboxGroup(
                     ["Lags", "Weather", "Calendar"], 
                     label="Feature Sets", 
                     value=["Lags", "Calendar"]
                 )
-                slider_split = gr.Slider(0.5, 0.9, value=0.8, label="Train/Test Split")
+                _ = gr.Slider(0.5, 0.9, value=0.8, label="Train/Test Split")
                 btn_train = gr.Button("🔥 Start AutoML Training", variant="stop")
             
             with gr.Column():
@@ -45,7 +45,7 @@ def create_control_tab():
         })
         
         with gr.Row():
-            out_registry = gr.Dataframe(value=registry_data, interactive=False)
+            _ = gr.Dataframe(value=registry_data, interactive=False)
             with gr.Column():
                 dropdown_models = gr.Dropdown(
                     ["v1.0 (Linear)", "v2.0 (XGBoost)", "v2.1 (LightGBM)"], 

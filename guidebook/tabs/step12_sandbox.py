@@ -1,5 +1,4 @@
 import gradio as gr
-import json
 
 def create_sandbox_tab():
     with gr.Group(elem_id="step-12"):
@@ -33,7 +32,7 @@ def create_sandbox_tab():
             
             # Seasonality: 주말엔 +2만 (단순 가정)
             # (실제로는 date 파싱해서 요일 확인해야 하지만, 여기선 Mock으로 토/일 문자열 체크)
-            is_weekend = False # "Sat" in date or "Sun" in date # (Not reliable without parsing, assume Weekday base)
+            # is_weekend = False # "Sat" in date or "Sun" in date
             
             # 2. Feature Impact Calculation
             # 온도: 20도 기준으로 따뜻하면 좋고, 너무 덥거나 추우면 감소

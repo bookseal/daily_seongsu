@@ -1,4 +1,3 @@
-import sys
 import os
 import pandas as pd
 import numpy as np
@@ -107,6 +106,6 @@ try:
         grid_search.fit(X_train, y_train)
         print(f"✅ Best Params: {grid_search.best_params_}")
         
-except Exception as e:
+except Exception:
     import traceback
     traceback.print_exc()

@@ -1,4 +1,3 @@
-import os
 import time
 import traceback
 from datetime import datetime, timedelta
@@ -37,7 +36,7 @@ def run_backfill(start_date="2024-01-01", end_date=None):
             try:
                 data = collector.fetch_daily_passenger_count(target_date)
                 if data:
-                    inserted = storage.save_subway_data(data)
+                    _ = storage.save_subway_data(data)
                     msg = f"✅ {target_date}: Saved {len(data)} rows."
                 else:
                     msg = f"⚠️ {target_date}: No data from API."

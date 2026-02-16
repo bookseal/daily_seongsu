@@ -41,7 +41,8 @@ def check_readiness_stats():
     """
     try:
         storage = SupabaseStorage()
-        if not storage.client: return "❌ Supabase Disconnected"
+        if not storage.client:
+            return "❌ Supabase Disconnected"
         
         # Check Subway Count
         res_sub = storage.client.table("subway_traffic").select("count", count="exact").execute()

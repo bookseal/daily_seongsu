@@ -1,6 +1,5 @@
 import gradio as gr
 import pandas as pd
-import plotly.express as px
 import os
 
 def load_data():
@@ -160,7 +159,7 @@ def create_observer_tab():
         base_dir = "/home/ubuntu/workspace/daily_seongsu"
         data_path = os.path.join(base_dir, "data_features_level2.csv")
         
-        source = "Real Data"
+        # source = "Real Data"
         df = pd.DataFrame()
         
         if os.path.exists(data_path):
@@ -175,7 +174,7 @@ def create_observer_tab():
             logs.append(f"- ⚠️ File not found at `{data_path}`. Using Dummy Data.")
         
         if df.empty:
-            source = "Dummy Data"
+            # source = "Dummy Data"
             df = load_data() # Fallback to dummy
             logs.append(f"- ℹ️ Generated **{len(df)} rows** of dummy data.")
         
@@ -218,7 +217,7 @@ def create_observer_tab():
             
             if len(df_clean) > 180:
                 df_clean = df_clean.tail(180)
-                logs.append(f"- ✂️ limited to last 180 rows for plotting")
+                logs.append("- ✂️ limited to last 180 rows for plotting")
             
             if df_clean.empty:
                 logs.append("❌ All data dropped! Cannot plot graphs. Please check if columns contain valid numeric data.")
@@ -254,7 +253,7 @@ def create_observer_tab():
             x_vals = df_clean[lag_col].tolist()
             y_vals = df_clean[target_col].tolist()
             
-            logs.append(f"#### Plotting Data Check:")
+            logs.append("#### Plotting Data Check:")
             logs.append(f"- X (first 3): {x_vals[:3]}")
             logs.append(f"- Y (first 3): {y_vals[:3]}")
 
@@ -399,7 +398,6 @@ def create_observer_tab():
             df_clean = df.dropna(subset=[target_col, lag_col])
             
             import plotly.graph_objects as go
-            import numpy as np
             
             # Histogram 1: Traffic
             fig_traffic = go.Figure()
@@ -476,7 +474,7 @@ def create_observer_tab():
             IQR = Q3 - Q1
             outliers = df_clean[(df_clean[target_col] < Q1 - 1.5*IQR) | (df_clean[target_col] > Q3 + 1.5*IQR)]
             
-            logs.append(f"\n### 🚨 Outlier Detection")
+            logs.append("\n### 🚨 Outlier Detection")
             logs.append(f"- Found **{len(outliers)} outliers** ({len(outliers)/len(df_clean)*100:.1f}% of data)")
             if len(outliers) > 0:
                 logs.append(f"- Range: {outliers[target_col].min():.0f} ~ {outliers[target_col].max():.0f}")

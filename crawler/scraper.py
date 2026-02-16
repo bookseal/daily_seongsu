@@ -122,7 +122,7 @@ class WeatherCollector:
             if response.status_code == 200:
                 try:
                     return response.json()
-                except:
+                except ValueError:
                     # Fallback or error handling for XML response
                     return response.text 
             return None

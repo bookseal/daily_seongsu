@@ -89,15 +89,15 @@ def verify_kma_data():
                 if isinstance(response.json(), dict):
                     print("✅ SUCCESS: Key accepted.")
                     return True
-            except:
+            except ValueError:
                  pass
             
             if "OpenAPI_ServiceResponse" in content:
                 # XML error response in 200 OK
-                print(f"❌ FAILED: KMA returned XML Error despite 200 OK. likely key decode issue.")
+                print("❌ FAILED: KMA returned XML Error despite 200 OK. likely key decode issue.")
                 return False
                 
-            print(f"✅ SUCCESS: Response received (Status 200).")
+            print("✅ SUCCESS: Response received (Status 200).")
             return True
         else:
              print(f"❌ FAILED: Status code {response.status_code}")

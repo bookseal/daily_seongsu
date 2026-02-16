@@ -1,6 +1,4 @@
 from storage_supabase import SupabaseStorage
-from datetime import datetime
-import random
 from dotenv import load_dotenv
 
 load_dotenv()

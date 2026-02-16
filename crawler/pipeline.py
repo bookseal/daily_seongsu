@@ -2,7 +2,6 @@
 import pandas as pd
 import os
 import sys
-import uuid
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -158,11 +157,11 @@ class DataPipeline:
     def log_execution(self, filepath, df):
         os.makedirs("logs", exist_ok=True)
         with open(filepath, "w") as f:
-            f.write(f"# Level 2 Execution Log\n")
+            f.write("# Level 2 Execution Log\n")
             f.write(f"- **Date**: {datetime.now()}\n")
             f.write(f"- **Version**: {self.version_id}\n")
             f.write(f"- **Rows**: {len(df)}\n")
-            f.write(f"## Sample Data\n")
+            f.write("## Sample Data\n")
             f.write(df.tail().to_markdown())
 
     # --- Step 10: Verify ---
