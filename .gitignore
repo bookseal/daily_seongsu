@@ -50,3 +50,24 @@ oci_api_key*.pem
 # Airflow
 airflow/logs/
 airflow/*.pid
+
+# Coverage reports
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Data files
+*.csv
+data/
+
+# Model artifacts
+*.pkl
+*.joblib
+best_model_name.txt
+
+# Nginx proxy manager
+nginx-proxy-manager/
+
+# Logs
+logs/*.md
+*.log
