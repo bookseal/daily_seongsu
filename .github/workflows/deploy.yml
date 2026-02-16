@@ -1,0 +1,45 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # CI Pipeline(ci.yml)이 성공해야만 배포를 진행합니다.
+    # 주의: 이 이름은 ci.yml의 job 이름과 정확히 일치해야 합니다.
+    # needs: lint-and-test 
+    # (참고: 별도 파일의 job을 needs로 걸려면 workflow_run을 써야 하지만, 
+    #  단순화를 위해 여기서는 독립 실행하거나, ci.yml을 합치는게 좋습니다.
+    #  하지만 GitHub Actions는 파일 간 종속성을 직접 'needs'로 지원하지 않습니다.
+    #  대신 'workflow_run'을 쓰거나, ci.yml 안에 deploy job을 추가해야 합니다.)
+    #  
+    #  지금은 분리된 파일이므로 'needs'를 제거하고 독립적으로 돌거나,
+    #  workflow_run을 사용하겠습니다.
+
+    steps:
+      - name: Deploy to OCI Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "🚀 Starting Deployment..."
+            
+            # 1. Project Directory 이동
+            cd /home/ubuntu/workspace/daily_seongsu
+            
+            # 2. 최신 코드 가져오기
+            git pull origin main
+            
+            # 3. Docker Rebuild & Restart
+            # OCI A1(ARM64) 서버에서 직접 빌드하여 아키텍처 호환성 문제 해결
+            docker compose down
+            docker compose up -d --build
+            
+            # 4. Cleanup
+            docker image prune -f
+            
+            echo "✅ Deployment Successful!"

@@ -1,6 +1,17 @@
 import gradio as gr
 
 
+
+import os
+
+def read_workflow_file(filename):
+    try:
+        base_path = "/home/ubuntu/workspace/daily_seongsu" 
+        with open(os.path.join(base_path, filename), "r") as f:
+            return f.read()
+    except Exception:
+        return "# Error reading file"
+
 def create_cicd_tab():
     """Level 6: CI/CD Pipeline — Step-by-step implementation guide."""
 
@@ -125,45 +136,9 @@ jobs:
 4. **협업 효율**: 팀원들이 안전하게 코드 머지 가능
             """)
 
-        with gr.Accordion("🔧 Workflow 예시 (🏷️ MOCK)", open=False):
-            gr.Markdown("""
-> [!🏷️ MOCK] 아래는 **실제 적용 전 예시**입니다. 실제 리포지토리에 반영되면 이 뱃지가 제거됩니다.
-
-```yaml
-# .github/workflows/ci.yml
-name: Daily Seongsu CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  lint-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Lint with ruff
-        run: |
-          pip install ruff
-          ruff check .
-
-      - name: Run tests
-        run: pytest tests/ -v
-```
-            """)
+        with gr.Accordion("🔧 실제 적용된 Workflow (✅ LIVE)", open=False):
+            gr.Markdown("> ✅ **LIVE**: 실제 `.github/workflows/ci.yml` 파일의 내용입니다.")
+            gr.Code(read_workflow_file(".github/workflows/ci.yml"), language="yaml")
 
         # --- CI Status ---
         with gr.Accordion("📊 CI 실행 현황", open=True):
@@ -264,50 +239,9 @@ class TestDataPipeline:
 - [ ] Rollback 전략 정의 (이전 이미지 태그로 복구)
         """)
 
-        with gr.Accordion("🔧 배포 Workflow 예시 (🏷️ MOCK)", open=False):
-            gr.Markdown("""
-> [!🏷️ MOCK] 아래는 **실제 적용 전 예시**입니다.
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy to Production
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [lint-and-test]  # CI 통과 후 실행
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-
-      - name: Build & Push Docker Image
-        run: |
-          docker build -t daily-seongsu:latest .
-          docker tag daily-seongsu:latest ${{ secrets.DOCKER_USERNAME }}/daily-seongsu:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/daily-seongsu:latest
-
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/ubuntu/workspace/daily_seongsu
-            docker compose pull
-            docker compose up -d
-            echo "✅ Deployment complete!"
-```
-            """)
+        with gr.Accordion("🔧 실제 적용된 CD Workflow (✅ LIVE)", open=False):
+            gr.Markdown("> ✅ **LIVE**: 실제 `.github/workflows/deploy.yml` 파일의 내용입니다.")
+            gr.Code(read_workflow_file(".github/workflows/deploy.yml"), language="yaml")
 
         # --- Mock: Deployment History ---
         with gr.Accordion("📊 배포 이력 (🏷️ MOCK)", open=True):
