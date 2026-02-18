@@ -71,3 +71,7 @@ nginx-proxy-manager/
 # Logs
 logs/*.md
 *.log
+
+# SSH Deploy Keys (GitHub Actions - never commit private keys!)
+.github/deploy_key
+.github/deploy_key.pub

@@ -1,22 +1,17 @@
 name: Deploy to Production
 
 on:
-  push:
-    branches: [ "main" ]
+  # CI 워크플로우가 main 브랜치에서 성공적으로 완료된 후에만 실행
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # CI Pipeline(ci.yml)이 성공해야만 배포를 진행합니다.
-    # 주의: 이 이름은 ci.yml의 job 이름과 정확히 일치해야 합니다.
-    # needs: lint-and-test 
-    # (참고: 별도 파일의 job을 needs로 걸려면 workflow_run을 써야 하지만, 
-    #  단순화를 위해 여기서는 독립 실행하거나, ci.yml을 합치는게 좋습니다.
-    #  하지만 GitHub Actions는 파일 간 종속성을 직접 'needs'로 지원하지 않습니다.
-    #  대신 'workflow_run'을 쓰거나, ci.yml 안에 deploy job을 추가해야 합니다.)
-    #  
-    #  지금은 분리된 파일이므로 'needs'를 제거하고 독립적으로 돌거나,
-    #  workflow_run을 사용하겠습니다.
+    # CI가 실패하면 배포하지 않음
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Deploy to OCI Server via SSH
@@ -24,22 +19,32 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
             echo "🚀 Starting Deployment..."
-            
-            # 1. Project Directory 이동
+
             cd /home/ubuntu/workspace/daily_seongsu
-            
+
+            # 1. 변경된 파일 목록 확인 (git pull 전)
+            git fetch origin main
+            CHANGED=$(git diff HEAD origin/main --name-only)
+            echo "📋 Changed files:"
+            echo "$CHANGED"
+
             # 2. 최신 코드 가져오기
             git pull origin main
-            
-            # 3. Docker Rebuild & Restart
-            # OCI A1(ARM64) 서버에서 직접 빌드하여 아키텍처 호환성 문제 해결
-            docker compose down
-            docker compose up -d --build
-            
-            # 4. Cleanup
-            docker image prune -f
-            
+
+            # 3. 배포 방식 자동 판단
+            # requirements.txt 또는 Dockerfile이 바뀌면 → 이미지 재빌드 (느림, ~5분)
+            # 코드(.py)만 바뀌면 → 컨테이너 재시작만 (빠름, ~30초)
+            if echo "$CHANGED" | grep -qE "requirements.txt|Dockerfile|docker-compose.yml"; then
+              echo "📦 Dependency change detected → Full rebuild..."
+              docker compose up -d --build
+              docker image prune -f
+            else
+              echo "🔄 Code-only change → Fast restart..."
+              docker restart daily-seongsu-container
+            fi
+
             echo "✅ Deployment Successful!"

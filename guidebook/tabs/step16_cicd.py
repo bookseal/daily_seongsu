@@ -6,11 +6,13 @@ import os
 
 def read_workflow_file(filename):
     try:
-        base_path = "/home/ubuntu/workspace/daily_seongsu" 
-        with open(os.path.join(base_path, filename), "r") as f:
+        # __file__ 기준으로 프로젝트 루트를 동적으로 계산 (컨테이너/로컬 모두 호환)
+        base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        filepath = os.path.join(base_path, filename)
+        with open(filepath, "r") as f:
             return f.read()
-    except Exception:
-        return "# Error reading file"
+    except Exception as e:
+        return f"# Error reading file: {e}\n# Tried path: {os.path.join(base_path, filename)}"
 
 def create_cicd_tab():
     """Level 6: CI/CD Pipeline — Step-by-step implementation guide."""
