@@ -16,18 +16,14 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: Setup SSH key from base64 secret
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-
       - name: Deploy to OCI Server via SSH
-        run: |
-          ssh -i ~/.ssh/deploy_key \
-              -o StrictHostKeyChecking=no \
-              ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key_path: ""
+          script: |
             set -e
             echo "🚀 Starting Deployment..."
 
@@ -43,8 +39,6 @@ jobs:
             git pull origin main
 
             # 3. 배포 방식 자동 판단
-            # requirements.txt 또는 Dockerfile이 바뀌면 → 이미지 재빌드 (느림, ~5분)
-            # 코드(.py)만 바뀌면 → 컨테이너 재시작만 (빠름, ~30초)
             if echo "$CHANGED" | grep -qE "requirements.txt|Dockerfile|docker-compose.yml"; then
               echo "📦 Dependency change detected → Full rebuild..."
               docker compose up -d --build
@@ -55,4 +49,3 @@ jobs:
             fi
 
             echo "✅ Deployment Successful!"
-          ENDSSH
