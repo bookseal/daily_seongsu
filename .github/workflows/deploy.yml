@@ -3,7 +3,7 @@ name: Deploy to Production
 on:
   # CI 워크플로우가 main 브랜치에서 성공적으로 완료된 후에만 실행
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["Daily Seongsu CI"]
     types: [completed]
     branches: [main]
 
