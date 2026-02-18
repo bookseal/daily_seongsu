@@ -6,12 +6,14 @@ on:
     workflows: ["Daily Seongsu CI"]
     types: [completed]
     branches: [main]
+  # GitHub UI에서 수동으로 실행 가능
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # CI가 실패하면 배포하지 않음
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # workflow_run: CI 성공 시만 / workflow_dispatch: 수동 실행 시 무조건
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Deploy to OCI Server via SSH
