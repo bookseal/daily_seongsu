@@ -103,7 +103,7 @@ graph LR
 
 
 # ==============================================
-# LEVEL 1: Cloud Data Engineering (Steps 1-5)
+# LEVEL 1: Cloud Data Engineering (L1-S1 ~ L1-S5)
 # ==============================================
 def create_level1_controls(pipeline):
     """Level 1: Cloud Data Engineering - Data Collection & Storage"""
@@ -111,19 +111,19 @@ def create_level1_controls(pipeline):
     gr.Markdown("""
     > **Goal**: Migrate from local file storage to a scalable Cloud Database (Supabase) and establish a robust Data Pipeline.
     
-    | Step | Description | Status |
-    |------|-------------|--------|
-    | 1.1 | API Connectivity Check | ✅ |
-    | 1.2 | Supabase Storage Check | ✅ |
-    | 1.3 | Subway Data Backfill (Target Y) | ✅ |
-    | 1.4 | Weather Data Backfill (Feature X) | ✅ |
-    | 1.5 | Level 2 Readiness Check | ✅ |
+    | Level | Level Status | Step ID | Description | Step Status |
+    |------|--------------|--------|-------------|-------------|
+    | L1 | ✅ Complete | L1-S1 | API Connectivity Check | ✅ Complete |
+    | L1 | ✅ Complete | L1-S2 | Supabase Storage Check | ✅ Complete |
+    | L1 | ✅ Complete | L1-S3 | Subway Data Backfill (Target Y) | ✅ Complete |
+    | L1 | ✅ Complete | L1-S4 | Weather Data Backfill (Feature X) | ✅ Complete |
+    | L1 | ✅ Complete | L1-S5 | Level 2 Readiness Check | ✅ Complete |
     """)
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
     
-    # STEP 1.1
-    gr.Markdown("### Step 1.1: API Connectivity Check")
+    # L1-S1
+    gr.Markdown("### L1-S1: API Connectivity Check")
     gr.HTML(HTML_VERIFY_FLOW)
     with gr.Accordion("📜 Source Code: verify_apis.py", open=False):
         gr.Code(read_code("crawler/verify_apis.py"), language="python", lines=10)
@@ -134,8 +134,8 @@ def create_level1_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 1.2
-    gr.Markdown("### Step 1.2: Supabase Storage Check")
+    # L1-S2
+    gr.Markdown("### L1-S2: Supabase Storage Check")
     gr.HTML(HTML_STORAGE_FLOW)
     with gr.Accordion("📜 Source Code: storage_supabase.py", open=False):
         gr.Code(read_code("crawler/storage_supabase.py"), language="python", lines=15)
@@ -148,8 +148,8 @@ def create_level1_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 1.3
-    gr.Markdown("### Step 1.3: Subway Data Backfill (Target Y)")
+    # L1-S3
+    gr.Markdown("### L1-S3: Subway Data Backfill (Target Y)")
     gr.HTML(HTML_BACKFILL_FLOW.replace("Yield Log", "Subway Log"))
     with gr.Accordion("📜 Source Code: backfill_subway.py", open=False):
         gr.Code(read_code("crawler/backfill_subway.py"), language="python", lines=15)
@@ -163,8 +163,8 @@ def create_level1_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 1.4
-    gr.Markdown("### Step 1.4: Weather Data Backfill (Feature X)")
+    # L1-S4
+    gr.Markdown("### L1-S4: Weather Data Backfill (Feature X)")
     with gr.Accordion("📜 Source Code: backfill_weather.py", open=False):
         gr.Code(read_code("crawler/backfill_weather.py"), language="python", lines=15)
         
@@ -177,8 +177,8 @@ def create_level1_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 1.5
-    gr.Markdown("### Step 1.5: Level 2 Readiness Check")
+    # L1-S5
+    gr.Markdown("### L1-S5: Level 2 Readiness Check")
     gr.HTML(HTML_READINESS_FLOW)
     with gr.Accordion("📜 Source Code: check_status.py", open=False):
         gr.Code(read_code("crawler/check_status.py"), language="python", lines=15)
@@ -190,7 +190,7 @@ def create_level1_controls(pipeline):
 
 
 # ==============================================
-# LEVEL 2: Preprocessing & Feature Engineering (Steps 2.1-2.5)
+# LEVEL 2: Preprocessing & Feature Engineering (L2-S1 ~ L2-S5)
 # ==============================================
 def create_level2_controls(pipeline):
     """Level 2: Preprocessing & Feature Engineering"""
@@ -198,19 +198,19 @@ def create_level2_controls(pipeline):
     gr.Markdown("""
     > **Goal**: Transform raw data into ML-ready features (Calendar, Lags, Rolling Averages).
     
-    | Step | Description | Status |
-    |------|-------------|--------|
-    | 2.1 | Calendar Feature Engineering | ✅ |
-    | 2.2 | Data Integration (Merge Y + X) | ✅ |
-    | 2.3 | Feature Generation (Lag & Rolling) | ✅ |
-    | 2.4 | Feature Store Upload | ✅ |
-    | 2.5 | Final Data Integrity Check | ✅ |
+    | Level | Level Status | Step ID | Description | Step Status |
+    |------|--------------|--------|-------------|-------------|
+    | L2 | ✅ Complete | L2-S1 | Calendar Feature Engineering | ✅ Complete |
+    | L2 | ✅ Complete | L2-S2 | Data Integration (Merge Y + X) | ✅ Complete |
+    | L2 | ✅ Complete | L2-S3 | Feature Generation (Lag & Rolling) | ✅ Complete |
+    | L2 | ✅ Complete | L2-S4 | Feature Store Upload | ✅ Complete |
+    | L2 | ✅ Complete | L2-S5 | Final Data Integrity Check | ✅ Complete |
     """)
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
     
-    # STEP 2.1
-    gr.Markdown("### Step 2.1: Calendar Feature Engineering")
+    # L2-S1
+    gr.Markdown("### L2-S1: Calendar Feature Engineering")
     gr.Markdown("Add holiday, weekend, and day-of-week features to enhance model understanding of temporal patterns.")
     btn_cal = gr.Button("▶ Generate Calendar Features", size="lg", variant="secondary")
     out_cal = gr.Dataframe(label="Calendar Preview", max_height=200)
@@ -218,8 +218,8 @@ def create_level2_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 2.2
-    gr.Markdown("### Step 2.2: Data Integration (Merge)")
+    # L2-S2
+    gr.Markdown("### L2-S2: Data Integration (Merge)")
     gr.Markdown("Combine Subway (Y) and Weather (X) data into a unified dataset.")
     with gr.Accordion("📜 Source Code: pipeline.py", open=False):
         gr.Code(read_code("crawler/pipeline.py"), language="python", lines=15)
@@ -231,8 +231,8 @@ def create_level2_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 2.3
-    gr.Markdown("### Step 2.3: Feature Generation (Lag & Rolling)")
+    # L2-S3
+    gr.Markdown("### L2-S3: Feature Generation (Lag & Rolling)")
     gr.Markdown("Create time-series features: `lag_1d`, `lag_7d`, `rolling_7d_mean`, etc.")
     btn_feat = gr.Button("▶ Generate Features", size="lg", variant="secondary")
     with gr.Row():
@@ -242,8 +242,8 @@ def create_level2_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 2.4
-    gr.Markdown("### Step 2.4: Feature Store Upload")
+    # L2-S4
+    gr.Markdown("### L2-S4: Feature Store Upload")
     gr.Markdown("Upload processed features to Supabase `model_features` table for ML training.")
     btn_store = gr.Button("▶ Upload to Feature Store", size="lg", variant="secondary")
     out_store = gr.Textbox(label="Upload Log", lines=4)
@@ -251,8 +251,8 @@ def create_level2_controls(pipeline):
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
 
-    # STEP 2.5
-    gr.Markdown("### Step 2.5: Final Data Integrity Check")
+    # L2-S5
+    gr.Markdown("### L2-S5: Final Data Integrity Check")
     gr.Markdown("Verify that the Feature Store contains valid, complete data ready for modeling.")
     btn_verify_final = gr.Button("▶ Run Final Integrity Check", size="lg", variant="primary")
     with gr.Row():

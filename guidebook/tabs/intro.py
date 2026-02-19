@@ -48,6 +48,7 @@ def create_intro_tab():
         
         # NEW: Phase/Level/Step Hierarchy Table
         gr.Markdown("## 📚 MLOps Roadmap: Phase → Level → Step")
+        gr.Markdown("> 용어 규칙: **Level**은 상위 성장 단계, **Step**은 각 Level 내부 실행 단위입니다.")
         
         gr.HTML(
             """
@@ -71,8 +72,9 @@ def create_intro_tab():
                         <th>Phase</th>
                         <th>Level</th>
                         <th>Name</th>
-                        <th>Steps</th>
-                        <th>Status</th>
+                        <th>Step Scope</th>
+                        <th>Level Status</th>
+                        <th>Step Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,20 +83,23 @@ def create_intro_tab():
                         <td rowspan="3" class="phase-1" style="font-weight: bold; vertical-align: top;">🏗️ P1: Foundation</td>
                         <td class="clickable phase-1">L1</td>
                         <td>Cloud Data Engineering</td>
-                        <td>Supabase Setup, Seoul API, Upsert Logic</td>
-                        <td class="status-done">✅ Done</td>
+                        <td>L1-S1~L1-S5</td>
+                        <td class="status-done">✅ Complete</td>
+                        <td class="status-done">✅ Complete</td>
                     </tr>
                     <tr onclick="switchTab('tab-p1', 'tab-l2')">
                         <td class="clickable phase-1">L2</td>
                         <td>Preprocessing Pipeline</td>
-                        <td>Weather Backfill, Lag/Rolling, Feature Store</td>
-                        <td class="status-done">✅ Done</td>
+                        <td>L2-S1~L2-S5</td>
+                        <td class="status-done">✅ Complete</td>
+                        <td class="status-done">✅ Complete</td>
                     </tr>
                     <tr onclick="switchTab('tab-p1', 'tab-l3')">
                         <td class="clickable phase-1">L3</td>
                         <td>Data Quality Assurance</td>
-                        <td>Feature Observer, Distribution Monitoring</td>
-                        <td class="status-done">✅ Done</td>
+                        <td>L3-S1~L3-S2</td>
+                        <td class="status-done">✅ Complete</td>
+                        <td class="status-done">✅ Complete</td>
                     </tr>
                     
                     <!-- Phase 2: Acceleration -->
@@ -102,20 +107,23 @@ def create_intro_tab():
                         <td rowspan="3" class="phase-2" style="font-weight: bold; vertical-align: top;">🚀 P2: Acceleration</td>
                         <td class="clickable phase-2">L4</td>
                         <td>AutoML</td>
-                        <td>PyCaret Setup, Model Compare, Tuning</td>
-                        <td class="status-done">✅ Done</td>
+                        <td>L4-S1~L4-S3</td>
+                        <td class="status-done">✅ Complete</td>
+                        <td class="status-done">✅ Complete</td>
                     </tr>
                     <tr onclick="switchTab('tab-p2', 'tab-l5')">
                         <td class="clickable phase-2">L5</td>
                         <td>Infrastructure as Code</td>
-                        <td>Dockerfile, Compose, Volumes</td>
-                        <td class="status-done">✅ Done</td>
+                        <td>L5-S1~L5-S3</td>
+                        <td class="status-done">✅ Complete</td>
+                        <td class="status-done">✅ Complete</td>
                     </tr>
                     <tr onclick="switchTab('tab-p2', 'tab-l6')">
                         <td class="clickable phase-2">L6</td>
                         <td>CI/CD Pipeline</td>
-                        <td>GitHub Actions, Testing, Auto-Deploy</td>
-                        <td class="status-planned">⚪ Planned</td>
+                        <td>L6-S1~L6-S3</td>
+                        <td class="status-done">✅ Complete</td>
+                        <td class="status-done">✅ Complete</td>
                     </tr>
                     
                     <!-- Phase 3: Operation -->
@@ -123,25 +131,29 @@ def create_intro_tab():
                         <td rowspan="4" class="phase-3" style="font-weight: bold; vertical-align: top;">⚙️ P3: Operation</td>
                         <td class="clickable phase-3">L7</td>
                         <td>Experiment Tracking</td>
-                        <td>MLflow Setup, Metrics, Registry</td>
+                        <td>L7-S1~L7-S3</td>
+                        <td class="status-planned">⚪ Planned</td>
                         <td class="status-planned">⚪ Planned</td>
                     </tr>
                     <tr onclick="switchTab('tab-p3', 'tab-l8')">
                         <td class="clickable phase-3">L8</td>
                         <td>Data Versioning</td>
-                        <td>DVC Init, Remote Storage, History</td>
+                        <td>L8-S1~L8-S3</td>
+                        <td class="status-planned">⚪ Planned</td>
                         <td class="status-planned">⚪ Planned</td>
                     </tr>
                     <tr onclick="switchTab('tab-p3', 'tab-l9')">
                         <td class="clickable phase-3">L9</td>
                         <td>System Observability</td>
-                        <td>Health API, Alerting, Latency Dashboard</td>
+                        <td>L9-S1~L9-S3</td>
+                        <td class="status-planned">⚪ Planned</td>
                         <td class="status-planned">⚪ Planned</td>
                     </tr>
                     <tr onclick="switchTab('tab-p3', 'tab-l10')">
                         <td class="clickable phase-3">L10</td>
                         <td>Orchestration</td>
-                        <td>Airflow DAGs, Dependencies, Lifecycle</td>
+                        <td>L10-S1~L10-S3</td>
+                        <td class="status-planned">⚪ Planned</td>
                         <td class="status-planned">⚪ Planned</td>
                     </tr>
                 </tbody>
@@ -180,7 +192,7 @@ def create_intro_tab():
                         <ul style="list-style: none; padding: 0; margin-top: 15px;">
                             <li style="margin: 8px 0;"><span style="color: #10b981;">✅</span> L4: AutoML</li>
                             <li style="margin: 8px 0;"><span style="color: #10b981;">✅</span> L5: Infrastructure as Code</li>
-                            <li style="margin: 8px 0;"><span style="color: #6b7280;">⚪</span> L6: CI/CD Pipeline</li>
+                            <li style="margin: 8px 0;"><span style="color: #10b981;">✅</span> L6: CI/CD Pipeline</li>
                         </ul>
                     </div>
                     """

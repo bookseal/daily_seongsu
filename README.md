@@ -55,6 +55,8 @@ graph TD
 
 ## 🗺️ MLOps Roadmap (Level 1 - 10)
 
+`Level` = 상위 성숙도 단계, `Step` = 각 Level 내부 실행 항목으로 구분합니다.
+
 ### 🟢 Level 1: Cloud Data Engineering (COMPLETE)
 - **Objective**: Establish a robust data pipeline replacing local files.
 - **Tech Stack**: Python (Crawler), **Supabase (PostgreSQL)**, OCI.
@@ -86,8 +88,8 @@ graph TD
 ### ⚪ Level 5: Infrastructure as Code (Docker)
 - **Action**: Full containerization of the Engine Room using `docker-compose.yml` optimized for ARM64 architecture.
 
-### ⚪ Level 6: CI/CD Pipeline
-- **Action**: GitHub Actions workflow to run unit tests and auto-deploy to OCI on push.
+### 🟢 Level 6: CI/CD Pipeline (COMPLETE)
+- **Action**: GitHub Actions workflow to run tests and auto-deploy to OCI on push.
 
 ### ⚪ Level 7: Experiment Tracking (MLflow)
 - **Action**: Centralized logging of RMSE/MAE metrics and model artifacts.

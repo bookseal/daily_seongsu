@@ -4,25 +4,25 @@ import numpy as np
 import os
 
 def create_automl_tab():
-    """Level 4: AutoML - Steps 4.1, 4.2, 4.3"""
+    """Level 4: AutoML - L4-S1, L4-S2, L4-S3."""
     
-    # Step Overview Table
+    # Level/Step Overview Table
     gr.Markdown("""
     > **Goal**: Automatically train, evaluate, and tune multiple ML models to find the best predictor for Seongsu Station traffic.
     
-    | Step | Description | Status |
-    |------|-------------|--------|
-    | 4.1 | Data Preparation & Train/Test Split | ✅ |
-    | 4.2 | Model Comparison (Linear, GBM, RandomForest) | ✅ |
-    | 4.3 | Hyperparameter Tuning (Best Model) | ✅ |
+    | Level | Level Status | Step ID | Description | Step Status |
+    |------|--------------|--------|-------------|-------------|
+    | L4 | ✅ Complete | L4-S1 | Data Preparation & Train/Test Split | ✅ Complete |
+    | L4 | ✅ Complete | L4-S2 | Model Comparison (Linear, GBM, RandomForest) | ✅ Complete |
+    | L4 | ✅ Complete | L4-S3 | Hyperparameter Tuning (Best Model) | ✅ Complete |
     """)
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
     
     # ============================================
-    # STEP 4.1: Data Preparation
+    # L4-S1: Data Preparation
     # ============================================
-    gr.Markdown("### Step 4.1: Data Preparation & Train/Test Split")
+    gr.Markdown("### L4-S1: Data Preparation & Train/Test Split")
     gr.Markdown("🔧 **Splitting data into training (80%) and testing (20%) sets**")
     
 
@@ -76,10 +76,10 @@ def create_automl_tab():
     btn_prepare.click(fn=prepare_data, inputs=[], outputs=[data_stats, split_preview])
     
     # ============================================
-    # STEP 4.2: Model Comparison
+    # L4-S2: Model Comparison
     # ============================================
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
-    gr.Markdown("### Step 4.2: Model Comparison")
+    gr.Markdown("### L4-S2: Model Comparison")
     gr.Markdown("🏆 **Train 3 Models and Compare Performance**")
     
 
@@ -109,7 +109,7 @@ def create_automl_tab():
             test_path = os.path.join(base_dir, "test_data.csv")
             
             if not os.path.exists(train_path):
-                return pd.DataFrame({"Error": ["Please run Step 4.1 first"]}), None
+                return pd.DataFrame({"Error": ["Please run L4-S1 first"]}), None
             
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
@@ -180,10 +180,10 @@ def create_automl_tab():
     btn_compare.click(fn=train_and_compare, inputs=[], outputs=[model_results, comparison_chart])
     
     # ============================================
-    # STEP 4.3: Hyperparameter Tuning
+    # L4-S3: Hyperparameter Tuning
     # ============================================
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 48px 0;">')
-    gr.Markdown("### Step 4.3: Hyperparameter Tuning")
+    gr.Markdown("### L4-S3: Hyperparameter Tuning")
     gr.Markdown("⚙️ **Fine-tune the Best Model with Grid Search**")
     
 
@@ -212,7 +212,7 @@ def create_automl_tab():
             test_path = os.path.join(base_dir, "test_data.csv")
             
             if not os.path.exists(train_path):
-                return "❌ Please run Step 4.2 first", None
+                return "❌ Please run L4-S2 first", None
             
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)

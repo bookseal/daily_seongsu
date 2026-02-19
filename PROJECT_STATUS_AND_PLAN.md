@@ -1,5 +1,7 @@
 # Daily Seongsu - Project Status & Roadmap
 
+`Level` = 상위 성숙도 단계, `Step` = 각 Level 내부 실행 단위로 관리합니다.
+
 ## 1. Project Overview
 "Daily Seongsu" is an AI-powered service that predicts real-time crowding at Seongsu Station (Seoul, Line 2). It analyzes subway traffic data and weather conditions to provide insights for visitors.
 
@@ -37,9 +39,9 @@ We have successfully built the foundation for data collection and infrastructure
 - **Goal**: Run everything automatically every day.
 - **Plan**: Use `cron` jobs to collect data and retrain the model every morning without human input.
 
-### Level 6: CI/CD (DevOps)
+### Level 6: CI/CD (DevOps) - **COMPLETE**
 - **Goal**: Automatic deployment.
-- **Plan**: Use **GitHub Actions**. When code is pushed, it will automatically test, build, and deploy to the OCI server.
+- **Status**: **GitHub Actions** is active. On push, CI tests run and deployment workflow is triggered.
 
 ### Level 7: Experiment Tracking
 - **Goal**: track AI experiments.

@@ -1,8 +1,9 @@
 import gradio as gr
 
 def create_sandbox_tab():
-    with gr.Group(elem_id="step-12"):
+    with gr.Group(elem_id="level4-sandbox"):
         gr.Markdown("## 🟢 Level 4: Business Intelligence (Sandbox)")
+        gr.Markdown("> Level Status: ⚪ Planned | Step ID: L4-S4 | Step Status: ⚪ Planned")
         gr.Markdown("---")
         gr.Markdown("### 🔮 AI Business Simulator")
         gr.Markdown("비즈니스 담당자가 날씨와 이벤트 시나리오를 설정하면, AI가 성수역 예상 트래픽과 그 근거를 시각화하여 제시합니다.")

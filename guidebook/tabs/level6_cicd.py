@@ -15,7 +15,7 @@ def read_workflow_file(filename):
         return f"# Error reading file: {e}\n# Tried path: {os.path.join(base_path, filename)}"
 
 def create_cicd_tab():
-    """Level 6: CI/CD Pipeline — Step-by-step implementation guide."""
+    """Level 6: CI/CD Pipeline with explicit Level/Step status separation."""
 
     with gr.Group(elem_id="level-6-cicd"):
         gr.Markdown("""
@@ -27,9 +27,9 @@ def create_cicd_tab():
         gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
 
         # =============================================
-        # Step 6.1: GitHub Actions Basics
+        # L6-S1: GitHub Actions Basics
         # =============================================
-        gr.Markdown("### Step 6.1: GitHub Actions Basics")
+        gr.Markdown("### L6-S1: GitHub Actions Basics")
         gr.Markdown("""
 **✅ 구현 완료**: GitHub 연동이 완료되어, 코드를 올릴 때마다 자동으로 테스트가 실행됩니다.
 
@@ -59,9 +59,9 @@ def create_cicd_tab():
         gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
 
         # =============================================
-        # Step 6.2: Automated Testing
+        # L6-S2: Automated Testing
         # =============================================
-        gr.Markdown("### Step 6.2: Automated Testing (Local vs CI)")
+        gr.Markdown("### L6-S2: Automated Testing (Local vs CI)")
         gr.Markdown("""
 **✅ 구현 완료**: `pytest`를 활용하여 핵심 모듈의 유닛 테스트를 작성했습니다.
 
@@ -99,9 +99,9 @@ pytest tests/
         gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
 
         # =============================================
-        # Step 6.3: Auto-Deploy to Production
+        # L6-S3: Auto-Deploy to Production
         # =============================================
-        gr.Markdown("### Step 6.3: Auto-Deploy to Production")
+        gr.Markdown("### L6-S3: Auto-Deploy to Production")
         gr.Markdown("""
 **✅ 구현 완료**: 테스트(CI)를 통과한 코드를 서버에 자동으로 배포하는 설정입니다.
 
@@ -136,11 +136,11 @@ pytest tests/
         gr.Markdown("""
 ### 📈 Level 6 전체 진행 현황
 
-| Step | 설명 | 상태 | 비고 |
-|------|------|------|------|
-| 6.1 | GitHub Actions Basics | ✅ 구현 완료 | CI 파이프라인 (Ruff + Pytest) |
-| 6.2 | Automated Testing | 🟡 진행 중 | 유닛 테스트 추가 필요 (현재 18%) |
-| 6.3 | Auto-Deploy to Production | ✅ 설정 완료 | SSH 배포 (Secrets 설정 필요) |
+| Level | Level Status | Step ID | Description | Step Status | Notes |
+|------|--------------|--------|-------------|-------------|-------|
+| L6 | ✅ 구현 완료 | L6-S1 | GitHub Actions Basics | ✅ 구현 완료 | CI 파이프라인 (Ruff + Pytest) |
+| L6 | ✅ 구현 완료 | L6-S2 | Automated Testing | ✅ 구현 완료 | Pytest 자동 실행 및 커버리지 리포트 |
+| L6 | ✅ 구현 완료 | L6-S3 | Auto-Deploy to Production | ✅ 설정 완료 | SSH 배포 (Secrets 설정 필요) |
 
-> 💡 **다음 단계**: Step 6.2의 테스트 커버리지를 높이기 위해 `test_pipeline.py`, `test_crawler.py` 등을 추가합니다.
+> 💡 **다음 단계**: L6-S2의 테스트 커버리지를 높이기 위해 `test_pipeline.py`, `test_crawler.py` 등을 추가합니다.
         """)

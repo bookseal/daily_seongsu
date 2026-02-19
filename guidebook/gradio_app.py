@@ -10,10 +10,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from crawler.pipeline import DataPipeline
 from guidebook.tabs.intro import create_intro_tab
 from guidebook.tabs.pipeline_controls import create_level1_controls, create_level2_controls
-from guidebook.tabs.step11_observer import create_observer_tab
-from guidebook.tabs.step14_automl import create_automl_tab
-from guidebook.tabs.step15_docker import create_docker_tab
-from guidebook.tabs.step16_cicd import create_cicd_tab
+from guidebook.tabs.level3_observer import create_observer_tab
+from guidebook.tabs.level4_automl import create_automl_tab
+from guidebook.tabs.level5_docker import create_docker_tab
+from guidebook.tabs.level6_cicd import create_cicd_tab
 
 # Instantiate Pipeline (Stateful - Shared across tabs)
 pipeline = DataPipeline()
@@ -262,11 +262,11 @@ with gr.Blocks(title="Daily Seongsu Guidebook", head=MERMAID_SCRIPT, js=JS_DARK_
                     gr.Markdown("""
                     > **Goal**: Track experiments, log metrics, and manage model versions.
                     
-                    | Step | Description | Status |
-                    |------|-------------|--------|
-                    | 7.1 | MLflow Setup | ⚪ Planned |
-                    | 7.2 | Metric Logging | ⚪ Planned |
-                    | 7.3 | Model Registry | ⚪ Planned |
+                    | Level | Level Status | Step ID | Description | Step Status |
+                    |------|--------------|--------|-------------|-------------|
+                    | L7 | ⚪ Planned | L7-S1 | MLflow Setup | ⚪ Planned |
+                    | L7 | ⚪ Planned | L7-S2 | Metric Logging | ⚪ Planned |
+                    | L7 | ⚪ Planned | L7-S3 | Model Registry | ⚪ Planned |
                     """)
                     gr.Info("🚧 Coming Soon: Centralized logging of model metrics and artifacts.")
                 
@@ -276,11 +276,11 @@ with gr.Blocks(title="Daily Seongsu Guidebook", head=MERMAID_SCRIPT, js=JS_DARK_
                     gr.Markdown("""
                     > **Goal**: Version control for datasets, just like Git for code.
                     
-                    | Step | Description | Status |
-                    |------|-------------|--------|
-                    | 8.1 | DVC Init | ⚪ Planned |
-                    | 8.2 | Remote Storage Link | ⚪ Planned |
-                    | 8.3 | Dataset History Tracking | ⚪ Planned |
+                    | Level | Level Status | Step ID | Description | Step Status |
+                    |------|--------------|--------|-------------|-------------|
+                    | L8 | ⚪ Planned | L8-S1 | DVC Init | ⚪ Planned |
+                    | L8 | ⚪ Planned | L8-S2 | Remote Storage Link | ⚪ Planned |
+                    | L8 | ⚪ Planned | L8-S3 | Dataset History Tracking | ⚪ Planned |
                     """)
                     gr.Info("🚧 Coming Soon: Tracking large datasets alongside code changes.")
                 
@@ -290,11 +290,11 @@ with gr.Blocks(title="Daily Seongsu Guidebook", head=MERMAID_SCRIPT, js=JS_DARK_
                     gr.Markdown("""
                     > **Goal**: Monitor system health, set up alerts, and track latency.
                     
-                    | Step | Description | Status |
-                    |------|-------------|--------|
-                    | 9.1 | Health Check API | ⚪ Planned |
-                    | 9.2 | Alerting (Telegram/Slack) | ⚪ Planned |
-                    | 9.3 | Latency Dashboard | ⚪ Planned |
+                    | Level | Level Status | Step ID | Description | Step Status |
+                    |------|--------------|--------|-------------|-------------|
+                    | L9 | ⚪ Planned | L9-S1 | Health Check API | ⚪ Planned |
+                    | L9 | ⚪ Planned | L9-S2 | Alerting (Telegram/Slack) | ⚪ Planned |
+                    | L9 | ⚪ Planned | L9-S3 | Latency Dashboard | ⚪ Planned |
                     """)
                     gr.Info("🚧 Coming Soon: Real-time monitoring of API latency and system health.")
                 
@@ -304,11 +304,11 @@ with gr.Blocks(title="Daily Seongsu Guidebook", head=MERMAID_SCRIPT, js=JS_DARK_
                     gr.Markdown("""
                     > **Goal**: Manage complex multi-step workflows with Airflow DAGs.
                     
-                    | Step | Description | Status |
-                    |------|-------------|--------|
-                    | 10.1 | Airflow DAG Design | ⚪ Planned |
-                    | 10.2 | Task Dependencies | ⚪ Planned |
-                    | 10.3 | Full Lifecycle Automation | ⚪ Planned |
+                    | Level | Level Status | Step ID | Description | Step Status |
+                    |------|--------------|--------|-------------|-------------|
+                    | L10 | ⚪ Planned | L10-S1 | Airflow DAG Design | ⚪ Planned |
+                    | L10 | ⚪ Planned | L10-S2 | Task Dependencies | ⚪ Planned |
+                    | L10 | ⚪ Planned | L10-S3 | Full Lifecycle Automation | ⚪ Planned |
                     """)
                     gr.Info("🚧 Coming Soon: Complex dependency management for the full ML lifecycle.")
 

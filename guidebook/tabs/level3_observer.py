@@ -41,7 +41,7 @@ STEP11_DESC_PART_1 = r"""
 
 ---
 
-### Step 11: Feature Observer
+### L3-S1: Feature Observer
 🏥 **Data Health & Distribution Monitoring**
 
 **Goal:** Before triggering the AutoML pipeline, we must perform a "Medical Check-up" on our Feature Store. This ensures the data is representative, high-quality, and free from anomalies that could degrade model performance.
@@ -103,22 +103,22 @@ flowchart LR
 """
 
 def create_observer_tab():
-    """Level 3: Data Quality Assurance - Steps 3.1 and 3.2"""
+    """Level 3: Data Quality Assurance - L3-S1 and L3-S2."""
     
-    # Step Overview Table
+    # Level/Step Overview Table
     gr.Markdown("""
     > **Goal**: Before triggering AutoML, perform a "Medical Check-up" on the Feature Store to ensure data quality.
     
-    | Step | Description | Status |
-    |------|-------------|--------|
-    | 3.1 | Feature Observer (Correlation Analysis) | ✅ |
-    | 3.2 | Distribution Monitoring | ✅ |
+    | Level | Level Status | Step ID | Description | Step Status |
+    |------|--------------|--------|-------------|-------------|
+    | L3 | ✅ Complete | L3-S1 | Feature Observer (Correlation Analysis) | ✅ Complete |
+    | L3 | ✅ Complete | L3-S2 | Distribution Monitoring | ✅ Complete |
     """)
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
     
-    # STEP 3.1
-    gr.Markdown("### Step 3.1: Feature Observer")
+    # L3-S1
+    gr.Markdown("### L3-S1: Feature Observer")
     gr.Markdown("🏥 **Data Health & Correlation Monitoring**")
     
     gr.Markdown(STEP11_DESC_PART_1)
@@ -336,7 +336,7 @@ def create_observer_tab():
     # STEP 3.2: Distribution Monitoring
     # ============================================
     gr.HTML('<hr style="border: none; border-top: 2px solid #60a5fa; margin: 60px 0;">')
-    gr.Markdown("### Step 3.2: Distribution Monitoring")
+    gr.Markdown("### L3-S2: Distribution Monitoring")
     gr.Markdown("📊 **Detecting Data Drift & Anomalies**")
     
     gr.Markdown("""

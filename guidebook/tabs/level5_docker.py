@@ -6,11 +6,11 @@ def create_docker_tab():
     gr.Markdown("""
     > **Goal**: Containerize the entire application for portability and reproducibility.
     
-    | Step | Description | Status |
-    |------|-------------|--------|
-    | 5.1 | Dockerfile Creation | ✅ |
-    | 5.2 | Docker Compose Setup | ✅ |
-    | 5.3 | Volume & Network Management | ✅ |
+    | Level | Level Status | Step ID | Description | Step Status |
+    |------|--------------|--------|-------------|-------------|
+    | L5 | ✅ Complete | L5-S1 | Dockerfile Creation | ✅ Complete |
+    | L5 | ✅ Complete | L5-S2 | Docker Compose Setup | ✅ Complete |
+    | L5 | ✅ Complete | L5-S3 | Volume & Network Management | ✅ Complete |
     """)
     
     gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')

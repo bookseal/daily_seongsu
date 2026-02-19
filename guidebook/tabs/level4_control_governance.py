@@ -3,12 +3,13 @@ import pandas as pd
 import time
 
 def create_control_tab():
-    with gr.Group(elem_id="step-13-14"):
+    with gr.Group(elem_id="level4-control-governance"):
         gr.Markdown("## 🟡 Level 4: AutoML & Governance")
+        gr.Markdown("> Level Status: ⚪ Planned | Step IDs: L4-S5, L4-S6 | Step Status: ⚪ Planned")
         gr.Markdown("---")
-        gr.Markdown("### Step 13: Pipeline Control Room (AutoML Training)")
+        gr.Markdown("### L4-S5: Pipeline Control Room (AutoML Training)")
         
-        # --- Step 13: Control Room ---
+        # --- L4-S5: Control Room ---
         with gr.Row():
             with gr.Column():
                 gr.Markdown("### 1. Training Config")
@@ -31,8 +32,8 @@ def create_control_tab():
 
         gr.HTML('<hr style="border: none; border-top: 1px solid #4b5563; margin: 24px 0;">')
         
-        # --- Step 14: Governance ---
-        gr.Markdown("### Step 14: Model Registry (Governance)")
+        # --- L4-S6: Governance ---
+        gr.Markdown("### L4-S6: Model Registry (Governance)")
         gr.Markdown("**Goal**: 모델의 버전 이력(Lineage)과 배포 상태를 관리합니다.")
         
         # Mock Registry Data
