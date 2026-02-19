@@ -1,51 +1,52 @@
 name: Deploy to Production
 
 on:
-  # CI 워크플로우가 main 브랜치에서 성공적으로 완료된 후에만 실행
   workflow_run:
     workflows: ["Daily Seongsu CI"]
     types: [completed]
     branches: [main]
-  # GitHub UI에서 수동으로 실행 가능
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # workflow_run: CI 성공 시만 / workflow_dispatch: 수동 실행 시 무조건
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: Deploy to OCI Server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          key_path: ""
-          script: |
-            set -e
-            echo "🚀 Starting Deployment..."
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          # |로 구분된 키를 줄바꿈으로 복원
+          echo "${{ secrets.SSH_KEY_PIPE }}" | tr '|' '\n' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # 키가 올바르게 파싱되는지 확인
+          ssh-keygen -l -f ~/.ssh/deploy_key
+          # known_hosts 등록
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-            cd /home/ubuntu/workspace/daily_seongsu
+      - name: Deploy via SSH
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+              -o StrictHostKeyChecking=no \
+              ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} bash << 'ENDSSH'
+          set -e
+          echo "🚀 Starting Deployment..."
+          cd /home/ubuntu/workspace/daily_seongsu
 
-            # 1. 변경된 파일 목록 확인 (git pull 전)
-            git fetch origin main
-            CHANGED=$(git diff HEAD origin/main --name-only)
-            echo "📋 Changed files:"
-            echo "$CHANGED"
+          git fetch origin main
+          CHANGED=$(git diff HEAD origin/main --name-only)
+          echo "📋 Changed files: $CHANGED"
+          git pull origin main
 
-            # 2. 최신 코드 가져오기
-            git pull origin main
+          if echo "$CHANGED" | grep -qE "requirements.txt|Dockerfile|docker-compose.yml"; then
+            echo "📦 Full rebuild..."
+            docker compose up -d --build
+            docker image prune -f
+          else
+            echo "🔄 Fast restart..."
+            docker restart daily-seongsu-container
+          fi
 
-            # 3. 배포 방식 자동 판단
-            if echo "$CHANGED" | grep -qE "requirements.txt|Dockerfile|docker-compose.yml"; then
-              echo "📦 Dependency change detected → Full rebuild..."
-              docker compose up -d --build
-              docker image prune -f
-            else
-              echo "🔄 Code-only change → Fast restart..."
-              docker restart daily-seongsu-container
-            fi
-
-            echo "✅ Deployment Successful!"
+          echo "✅ Deployment Successful!"
+          ENDSSH
