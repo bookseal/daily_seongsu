@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt -r crawler/requirements.txt
 
       # Step 4: Lint with ruff (modern, fast Python linter)
       - name: Lint with ruff
@@ -38,17 +38,12 @@ jobs:
           ruff check . --output-format=github
         continue-on-error: true  # Don't fail the build on lint warnings initially
 
-      # Step 5: Run tests (if tests directory exists)
+      # Step 5: Run tests (quality gate for Step 6.2)
       - name: Run tests with pytest
         run: |
           pip install pytest pytest-cov
-          if [ -d "tests" ]; then
-            pytest tests/ -v --cov=. --cov-report=term-missing
-          else
-            echo "⚠️ No tests directory found - skipping tests"
-            echo "📝 Next step: Create tests/ directory and add test files"
-          fi
-        continue-on-error: true  # Don't fail initially while we build up tests
+          test -d tests
+          pytest tests/ -v --cov=. --cov-report=term-missing
 
       # Step 6: Display workflow summary
       - name: Workflow Summary
