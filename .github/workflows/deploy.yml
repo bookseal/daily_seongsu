@@ -35,17 +35,17 @@ jobs:
           cd /home/ubuntu/workspace/daily_seongsu
 
           git fetch origin main
-          CHANGED=$(git diff HEAD origin/main --name-only)
+          CHANGED=$(git diff --name-only HEAD origin/main)
           echo "📋 Changed files: $CHANGED"
-          git pull origin main
+          # Deployment target must match remote exactly; discard local drift on server.
+          git reset --hard origin/main
 
-          if echo "$CHANGED" | grep -qE "requirements.txt|Dockerfile|docker-compose.yml"; then
-            echo "📦 Full rebuild..."
+          if [ -n "$CHANGED" ]; then
+            echo "📦 Changes detected, rebuilding containers..."
             docker compose up -d --build
             docker image prune -f
           else
-            echo "🔄 Fast restart..."
-            docker restart daily-seongsu-container
+            echo "ℹ️ No changes to deploy."
           fi
 
           echo "✅ Deployment Successful!"
