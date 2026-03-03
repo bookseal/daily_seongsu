@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name bit-habit.com www.bit-habit.com;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location /habit/ {
+            alias /usr/share/nginx/habit/;
+            try_files $uri $uri/ =404;
+        }
+
+        location = /nginx_status {
+            stub_status;
+            allow 127.0.0.1;
+            allow 10.0.0.0/8; # Allow internal
+            deny all;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name habit.bit-habit.com;
+        root /usr/share/nginx/flutter;
+        index index.html;
+
+        # API Proxy handled by Ingress logic if needed, but here we just serve static files.
+        # Original config had /api/ proxy_pass to FastAPI. 
+        # Ingress should route /api/ to FastAPI service directly, skipping this Nginx.
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name status.bit-habit.com;
+        root /usr/share/nginx/status;
+        index index.shtml;
+        
+        auth_basic "status";
+        auth_basic_user_file /etc/nginx/conf.d/.htpasswd;
+
+        location = /nginx_status {
+            stub_status;
+        }
+        
+        location = /last_ips {
+            alias /usr/share/nginx/status/last_ips.txt;
+            default_type text/plain;
+        }
+
+        location / {
+            ssi on;
+            add_header Cache-Control "no-store";
+            try_files /index.shtml =404;
+        }
+    }
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-auth
+type: Opaque
+stringData:
+  .htpasswd: |
+    status:$apr1$42155hxK$iPnYe4fI84z9xQe5zV9dg1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: static-web
+  template:
+    metadata:
+      labels:
+        app: static-web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+        - name: habit
+          mountPath: /usr/share/nginx/habit
+        - name: status
+          mountPath: /usr/share/nginx/status
+        - name: flutter
+          mountPath: /usr/share/nginx/flutter
+        - name: config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        - name: auth
+          mountPath: /etc/nginx/conf.d/.htpasswd
+          subPath: .htpasswd
+      volumes:
+      - name: html
+        hostPath:
+          path: /var/www/html
+      - name: habit
+        hostPath:
+          path: /var/www/habit
+      - name: status
+        hostPath:
+          path: /var/www/status
+      - name: flutter
+        hostPath:
+          path: /home/ubuntu/workspace/bithabit_flutter/build/web
+      - name: config
+        configMap:
+          name: nginx-conf
+      - name: auth
+        secret:
+          secretName: basic-auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-web-svc
+spec:
+  selector:
+    app: static-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

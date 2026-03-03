@@ -31,3 +31,12 @@ logs/
 nginx-proxy-manager/
 k3s_migration/
 infra/
+k8s/
+
+# Data files (mounted via PVC in K8s)
+*.csv
+
+# Sensitive files
+*.env*
+*.pem
+*.key

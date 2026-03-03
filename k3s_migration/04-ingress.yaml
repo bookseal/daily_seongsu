@@ -1,0 +1,171 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - bit-habit.com
+    - "*.bit-habit.com"
+    secretName: tls-secret
+  rules:
+  # 1. bit-habit.com -> static-web
+  - host: bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: static-web-svc
+            port:
+              number: 80
+  - host: www.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: static-web-svc
+            port:
+              number: 80
+
+  # 2. blog.bit-habit.com -> blog-svc
+  - host: blog.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blog-svc
+            port:
+              number: 80
+  - host: www.blog.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blog-svc
+            port:
+              number: 80
+
+  # 3. booktoss.bit-habit.com -> booktoss-svc
+  - host: booktoss.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: booktoss-svc
+            port:
+              number: 80
+
+  # 4. code-server.bit-habit.com -> code-server-svc
+  - host: code-server.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: code-server-svc
+            port:
+              number: 80
+
+  # 5. daily-seongsu.bit-habit.com -> daily-seongsu-svc
+  - host: daily-seongsu.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: daily-seongsu-svc
+            port:
+              number: 80
+
+  # 6. habit.bit-habit.com -> static-web-svc AND fastapi-svc
+  - host: habit.bit-habit.com
+    http:
+      paths:
+      - path: /api/
+        pathType: Prefix
+        backend:
+          service:
+            name: fastapi-svc
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: static-web-svc
+            port:
+              number: 80
+
+  # 7. startpage.bit-habit.com -> fastapi-svc
+  - host: startpage.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fastapi-svc
+            port:
+              number: 80
+
+  # 8. status.bit-habit.com -> static-web-svc
+  - host: status.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: static-web-svc
+            port:
+              number: 80
+
+  # 9. viz.bit-habit.com -> viz-svc
+  - host: viz.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: viz-svc
+            port:
+              number: 80
+
+  # 10. wiki.bit-habit.com -> wiki-svc
+  - host: wiki.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wiki-svc
+            port:
+              number: 80
+  - host: www.wiki.bit-habit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wiki-svc
+            port:
+              number: 80

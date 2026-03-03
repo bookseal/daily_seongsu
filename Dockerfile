@@ -1,7 +1,12 @@
 # ==========================================
 # Stage 1: Builder (Compile dependencies)
 # ==========================================
-FROM python:3.11-slim-bookworm as builder
+# K8s 최적화:
+#   - .env 파일은 이미지에 포함되지 않음 (.dockerignore로 제외)
+#     → 환경변수는 K8s Secret (envFrom: daily-seongsu-secret) 으로 주입
+#   - *.csv 데이터 파일은 이미지에 포함되지 않음 (.dockerignore로 제외)
+#     → K8s PersistentVolumeClaim (daily-seongsu-data-pvc) 으로 /app에 마운트
+FROM python:3.11-slim-bookworm AS builder
 
 WORKDIR /app
 

@@ -1,5 +1,3 @@
-# Daily Seongsu CI Pipeline
-# GitHub Actions workflow for automated testing and code quality checks
 name: Daily Seongsu CI
 
 on:
@@ -12,18 +10,18 @@ jobs:
   lint-and-test:
     name: Lint and Test
     runs-on: ubuntu-latest
-    
+
     steps:
-      # Step 1: Checkout the repository code
+      # Step 1: Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Set up Python environment
+      # Step 2: Python env
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-          cache: 'pip'  # Cache pip dependencies for faster builds
+          python-version: "3.10"
+          cache: "pip"
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -31,21 +29,29 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r crawler/requirements.txt
 
-      # Step 4: Lint with ruff (modern, fast Python linter)
+      # Step 4: Lint with ruff
       - name: Lint with ruff
         run: |
           pip install ruff
           ruff check . --output-format=github
-        continue-on-error: true  # Don't fail the build on lint warnings initially
+        continue-on-error: true
 
-      # Step 5: Run tests (quality gate for Step 6.2)
+      # Step 5: Run tests
       - name: Run tests with pytest
         run: |
           pip install pytest pytest-cov
           test -d tests
           pytest tests/ -v --cov=. --cov-report=term-missing
 
-      # Step 6: Display workflow summary
+      # Step 6: Build Docker image (validate Dockerfile, no push)
+      # K8s 배포에서는 서버 로컬에서 이미지를 빌드 & import하므로
+      # CI에서는 빌드 성공 여부만 검증한다 (push 없음)
+      - name: Build Docker image (validation only)
+        run: |
+          docker build -t daily-seongsu:ci-test .
+          echo "✅ Docker build succeeded"
+
+      # Step 7: Summary
       - name: Workflow Summary
         if: always()
         run: |
@@ -56,3 +62,4 @@ jobs:
           echo "✅ Dependencies installed: Success" >> $GITHUB_STEP_SUMMARY
           echo "✅ Lint check: Completed" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests: Completed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Docker build: Completed" >> $GITHUB_STEP_SUMMARY

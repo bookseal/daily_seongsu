@@ -20,33 +20,46 @@ jobs:
           # |로 구분된 키를 줄바꿈으로 복원
           echo "${{ secrets.SSH_KEY_PIPE }}" | tr '|' '\n' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          # 키가 올바르게 파싱되는지 확인
           ssh-keygen -l -f ~/.ssh/deploy_key
-          # known_hosts 등록
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy via SSH
+      - name: Deploy via SSH (K8s-native)
         run: |
           ssh -i ~/.ssh/deploy_key \
               -o StrictHostKeyChecking=no \
               ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} bash << 'ENDSSH'
           set -e
-          echo "🚀 Starting Deployment..."
+          echo "🚀 Starting K8s Deployment..."
           cd /home/ubuntu/workspace/daily_seongsu
 
+          # 1. Git: 원격과 동기화
           git fetch origin main
           CHANGED=$(git diff --name-only HEAD origin/main)
           echo "📋 Changed files: $CHANGED"
-          # Deployment target must match remote exactly; discard local drift on server.
           git reset --hard origin/main
 
           if [ -n "$CHANGED" ]; then
-            echo "📦 Changes detected, rebuilding containers..."
-            docker compose up -d --build
-            docker image prune -f
+            echo "📦 Changes detected, rebuilding image..."
+
+            # 2. Docker 이미지 로컬 빌드
+            docker build -t daily-seongsu:latest .
+
+            # 3. K3s containerd에 이미지 import
+            #    (imagePullPolicy: Never → 레지스트리 pull 없이 로컬 이미지 사용)
+            docker save daily-seongsu:latest | sudo k3s ctr images import -
+
+            # 4. K8s Deployment 롤링 재시작
+            #    새 이미지가 동일한 태그(:latest)이므로 annotation 업데이트로 재기동 유도
+            kubectl annotate deployment daily-seongsu \
+              kubernetes.io/change-cause="deploy-$(date +%Y%m%d-%H%M%S)" \
+              --overwrite
+            kubectl rollout restart deployment/daily-seongsu
+
+            # 5. 롤아웃 완료 대기 (최대 5분)
+            kubectl rollout status deployment/daily-seongsu --timeout=300s
+
+            echo "✅ K8s Deployment Successful!"
           else
             echo "ℹ️ No changes to deploy."
           fi
-
-          echo "✅ Deployment Successful!"
           ENDSSH

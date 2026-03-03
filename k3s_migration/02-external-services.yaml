@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 2368
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: blog-svc
+subsets:
+  - addresses:
+      - ip: 10.0.0.61
+    ports:
+      - port: 2368
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booktoss-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8501
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: booktoss-svc
+subsets:
+  - addresses:
+      - ip: 10.0.0.61
+    ports:
+      - port: 8501
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: code-server-svc
+subsets:
+  - addresses:
+      - ip: 10.0.0.61
+    ports:
+      - port: 8081
+---
+# NOTE: daily-seongsu-svc는 이 파일에서 제거됨
+# K8s Deployment로 마이그레이션 완료 → k8s/daily-seongsu/
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: fastapi-svc
+subsets:
+  - addresses:
+      - ip: 10.0.0.61
+    ports:
+      - port: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: viz-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8503
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: viz-svc
+subsets:
+  - addresses:
+      - ip: 10.0.0.61
+    ports:
+      - port: 8503
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wiki-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3001
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: wiki-svc
+subsets:
+  - addresses:
+      - ip: 10.0.0.61
+    ports:
+      - port: 3001
