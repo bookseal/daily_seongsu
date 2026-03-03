@@ -29,7 +29,6 @@ logs/
 .agent/
 .gemini/
 nginx-proxy-manager/
-k3s_migration/
 infra/
 k8s/
 

@@ -33,11 +33,13 @@ description: daily-seongsu.bit-habit.com 배포 전체 구조 (k3s, Gradio, GitH
 ## 1. Gradio 앱 설정
 
 ### 실행 방식
+
 - **실행 명령**: `python guidebook/gradio_app.py --demo-name daily_seongsu`
 - **바인딩**: `0.0.0.0:7860` (환경변수 `GRADIO_SERVER_NAME`, `GRADIO_SERVER_PORT`)
 - **컨테이너 이름**: `daily-seongsu-container`
 
 ### Dockerfile (2-stage build)
+
 ```
 Stage 1 (builder): python:3.11-slim-bookworm
   └── requirements.txt 설치 → /install
@@ -49,17 +51,19 @@ Stage 2 (runtime): python:3.11-slim-bookworm
 ```
 
 ### docker-compose.yml
-| 항목 | 값 |
-|---|---|
-| image | `daily-seongsu:latest` |
-| ports | `7860:7860` |
-| restart | `unless-stopped` |
-| healthcheck | `curl http://localhost:7860/` (30s 간격) |
-| resource limit | CPU 1.0, Memory 1G |
-| volumes | `data_features_level2.csv`, `train_data.csv`, `test_data.csv` |
-| env_file | `.env` |
+
+| 항목           | 값                                                            |
+| -------------- | ------------------------------------------------------------- |
+| image          | `daily-seongsu:latest`                                        |
+| ports          | `7860:7860`                                                   |
+| restart        | `unless-stopped`                                              |
+| healthcheck    | `curl http://localhost:7860/` (30s 간격)                      |
+| resource limit | CPU 1.0, Memory 1G                                            |
+| volumes        | `data_features_level2.csv`, `train_data.csv`, `test_data.csv` |
+| env_file       | `.env`                                                        |
 
 ### 배포 위치
+
 ```
 /home/ubuntu/workspace/daily_seongsu/
 ├── Dockerfile
@@ -74,7 +78,9 @@ Stage 2 (runtime): python:3.11-slim-bookworm
 ## 2. K3s 설정
 
 ### 아키텍처
+
 K3s는 **Traefik**을 내장 Ingress Controller로 사용한다.
+
 ```
 인터넷 : 443
    │
@@ -82,7 +88,7 @@ K3s는 **Traefik**을 내장 Ingress Controller로 사용한다.
 Traefik (K3s 내장) :443/:80
    │   TLS 종료 (tls-secret)
    ▼
-Ingress Rules (04-ingress.yaml 또는 k8s/ingress.yaml)
+Ingress Rules (infra/k8s-global/ingress.yaml)
    │
    ├── daily-seongsu.bit-habit.com → daily-seongsu-svc:80
    ├── blog.bit-habit.com          → blog-svc:80
@@ -98,20 +104,18 @@ Ingress Rules (04-ingress.yaml 또는 k8s/ingress.yaml)
 ### K8s 매니페스트 파일 구조
 
 ```
-k3s_migration/            ← 초기 마이그레이션 버전
-├── 02-external-services.yaml   ← 호스트 앱 연결 (Service + Endpoints)
-├── 03-static-deployment.yaml   ← 정적 파일 서빙 (Nginx Pod + ConfigMap)
-└── 04-ingress.yaml             ← 도메인 라우팅 규칙
+k8s/                            ← daily-seongsu 전용 K8s 앱 배포 설정 폴더
 
-k8s/                      ← 현재 운영 버전 (cert-manager 적용)
-├── ingress.yaml                ← 도메인 라우팅 (cert-manager 어노테이션 추가)
-└── cert-manager/
-    ├── aws-secret.yaml         ← AWS Route53 Access Key Secret
-    ├── cluster-issuer.yaml     ← Let's Encrypt ACME 발급자 설정
-    └── certificate.yaml        ← 인증서 요청 (bit-habit.com + *.bit-habit.com)
+infra/                          ← 통합 서버/인프라 설정 폴더
+├── k8s-global/
+│   ├── ingress.yaml            ← 전체 사이트 도메인 라우팅 규칙
+│   └── cert-manager/           ← Let's Encrypt 자동 갱신 및 보안 설정
+│
+└── legacy-migration/           ← 예전 migration 작업 파일들 모음
 ```
 
 ### daily-seongsu-svc 동작 원리
+
 `daily-seongsu`는 K8s 클러스터 외부(호스트)에서 Docker로 실행되므로,
 **Headless Service + Endpoints** 패턴으로 연결한다:
 
@@ -129,6 +133,7 @@ kind: Endpoints
 ```
 
 ### TLS / HTTPS (cert-manager)
+
 ```
 cert-manager (ClusterIssuer: letsencrypt-prod)
    └── ACME DNS-01 Challenge
@@ -138,12 +143,12 @@ cert-manager (ClusterIssuer: letsencrypt-prod)
 Ingress → spec.tls.secretName: tls-secret 참조
 ```
 
-| 리소스 | 파일 | 역할 |
-|---|---|---|
-| `ClusterIssuer` | `cluster-issuer.yaml` | Let's Encrypt ACME 발급자, Route53 DNS-01 사용 |
-| `Certificate` | `certificate.yaml` | `bit-habit.com` + `*.bit-habit.com` 인증서 요청 |
-| `Secret` (tls-secret) | cert-manager 자동 생성 | Traefik이 TLS 종료에 사용 |
-| `Secret` (route53-credentials-secret) | `aws-secret.yaml` | AWS Route53 API 키 |
+| 리소스                                | 파일                   | 역할                                            |
+| ------------------------------------- | ---------------------- | ----------------------------------------------- |
+| `ClusterIssuer`                       | `cluster-issuer.yaml`  | Let's Encrypt ACME 발급자, Route53 DNS-01 사용  |
+| `Certificate`                         | `certificate.yaml`     | `bit-habit.com` + `*.bit-habit.com` 인증서 요청 |
+| `Secret` (tls-secret)                 | cert-manager 자동 생성 | Traefik이 TLS 종료에 사용                       |
+| `Secret` (route53-credentials-secret) | `aws-secret.yaml`      | AWS Route53 API 키                              |
 
 ---
 
@@ -161,7 +166,7 @@ Ingress → spec.tls.secretName: tls-secret 참조
    - TLS 종료: tls-secret (cert-manager가 자동 갱신한 Let's Encrypt 인증서)
    - SNI: daily-seongsu.bit-habit.com 확인
 
-⑤ Ingress 라우팅 (k8s/ingress.yaml)
+⑤ Ingress 라우팅 (infra/k8s-global/ingress.yaml)
    - host: daily-seongsu.bit-habit.com
    - backend: daily-seongsu-svc:80
 
@@ -183,6 +188,7 @@ Ingress → spec.tls.secretName: tls-secret 참조
 ## 4. GitHub Actions CD 파이프라인
 
 ### 트리거 조건
+
 ```
 CI 워크플로우("Daily Seongsu CI") 성공 후 자동 실행
    또는
@@ -190,17 +196,19 @@ workflow_dispatch (수동 실행)
 ```
 
 ### ci.yml (CI 워크플로우)
+
 **트리거**: `push` 또는 `PR` → `main` 브랜치
 
-| 단계 | 내용 |
-|---|---|
-| Checkout | 코드 체크아웃 |
-| Python 3.10 설정 | pip 캐시 활성화 |
-| 의존성 설치 | `requirements.txt` + `crawler/requirements.txt` |
-| Lint (ruff) | `ruff check . --output-format=github` (오류 시 계속 진행) |
-| Test (pytest) | `pytest tests/ -v --cov=. --cov-report=term-missing` |
+| 단계             | 내용                                                      |
+| ---------------- | --------------------------------------------------------- |
+| Checkout         | 코드 체크아웃                                             |
+| Python 3.10 설정 | pip 캐시 활성화                                           |
+| 의존성 설치      | `requirements.txt` + `crawler/requirements.txt`           |
+| Lint (ruff)      | `ruff check . --output-format=github` (오류 시 계속 진행) |
+| Test (pytest)    | `pytest tests/ -v --cov=. --cov-report=term-missing`      |
 
 ### deploy.yml (CD 워크플로우)
+
 **트리거**: CI 성공 후 자동 실행 (또는 수동)
 
 ```
@@ -227,11 +235,12 @@ GitHub Actions Runner (ubuntu-latest)
 ```
 
 ### GitHub Secrets 필요 항목
-| Secret 이름 | 내용 |
-|---|---|
+
+| Secret 이름    | 내용                                   |
+| -------------- | -------------------------------------- |
 | `SSH_KEY_PIPE` | RSA PEM 개인키 (`\n` → `\|` 로 인코딩) |
-| `SERVER_HOST` | 서버 IP 또는 도메인 |
-| `SERVER_USER` | SSH 사용자명 (예: `ubuntu`) |
+| `SERVER_HOST`  | 서버 IP 또는 도메인                    |
+| `SERVER_USER`  | SSH 사용자명 (예: `ubuntu`)            |
 
 ---
 
@@ -249,7 +258,7 @@ cd /home/ubuntu/workspace/daily_seongsu
 docker compose restart
 
 # K8s Ingress 규칙 재적용
-kubectl apply -f /home/ubuntu/workspace/daily_seongsu/k8s/ingress.yaml
+kubectl apply -f /home/ubuntu/workspace/daily_seongsu/infra/k8s-global/ingress.yaml
 
 # K9s (터미널 대시보드)
 k9s
