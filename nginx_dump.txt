@@ -1,0 +1,741 @@
+# configuration file /etc/nginx/nginx.conf:
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+        worker_connections 768;
+        # multi_accept on;
+}
+
+http {
+
+        ##
+        # Basic Settings
+        ##
+
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        # server_tokens off;
+
+        # server_names_hash_bucket_size 64;
+        # server_name_in_redirect off;
+
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        ##
+        # SSL Settings
+        ##
+
+        ssl_protocols TLSv1.2 TLSv1.3; # Drop legacy TLSv1/1.1
+        ssl_prefer_server_ciphers on;
+
+        # Global rate limiting zone (10 req/s per IP)
+        limit_req_zone $binary_remote_addr zone=rl_general:10m rate=10r/s;
+        limit_req_status 429;
+
+        ##
+        # Logging Settings
+        ##
+
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+
+        ##
+        # Gzip Settings
+        ##
+
+        gzip on;
+
+        # gzip_vary on;
+        # gzip_proxied any;
+        # gzip_comp_level 6;
+        # gzip_buffers 16 8k;
+        # gzip_http_version 1.1;
+        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        ##
+        # Virtual Host Configs
+        ##
+
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+}
+
+
+#mail {
+#       # See sample authentication script at:
+#       # http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript
+# 
+#       # auth_http localhost/auth.php;
+#       # pop3_capabilities "TOP" "USER";
+#       # imap_capabilities "IMAP4rev1" "UIDPLUS";
+# 
+#       server {
+#               listen     localhost:110;
+#               protocol   pop3;
+#               proxy      on;
+#       }
+# 
+#       server {
+#               listen     localhost:143;
+#               protocol   imap;
+#               proxy      on;
+#       }
+#}
+
+# configuration file /etc/nginx/modules-enabled/50-mod-http-image-filter.conf:
+load_module modules/ngx_http_image_filter_module.so;
+
+# configuration file /etc/nginx/modules-enabled/50-mod-http-xslt-filter.conf:
+load_module modules/ngx_http_xslt_filter_module.so;
+
+# configuration file /etc/nginx/modules-enabled/50-mod-mail.conf:
+load_module modules/ngx_mail_module.so;
+
+# configuration file /etc/nginx/modules-enabled/50-mod-stream.conf:
+load_module modules/ngx_stream_module.so;
+
+# configuration file /etc/nginx/mime.types:
+
+types {
+    text/html                             html htm shtml;
+    text/css                              css;
+    text/xml                              xml;
+    image/gif                             gif;
+    image/jpeg                            jpeg jpg;
+    application/javascript                js;
+    application/atom+xml                  atom;
+    application/rss+xml                   rss;
+
+    text/mathml                           mml;
+    text/plain                            txt;
+    text/vnd.sun.j2me.app-descriptor      jad;
+    text/vnd.wap.wml                      wml;
+    text/x-component                      htc;
+
+    image/png                             png;
+    image/tiff                            tif tiff;
+    image/vnd.wap.wbmp                    wbmp;
+    image/x-icon                          ico;
+    image/x-jng                           jng;
+    image/x-ms-bmp                        bmp;
+    image/svg+xml                         svg svgz;
+    image/webp                            webp;
+
+    application/font-woff                 woff;
+    application/java-archive              jar war ear;
+    application/json                      json;
+    application/mac-binhex40              hqx;
+    application/msword                    doc;
+    application/pdf                       pdf;
+    application/postscript                ps eps ai;
+    application/rtf                       rtf;
+    application/vnd.apple.mpegurl         m3u8;
+    application/vnd.ms-excel              xls;
+    application/vnd.ms-fontobject         eot;
+    application/vnd.ms-powerpoint         ppt;
+    application/vnd.wap.wmlc              wmlc;
+    application/vnd.google-earth.kml+xml  kml;
+    application/vnd.google-earth.kmz      kmz;
+    application/x-7z-compressed           7z;
+    application/x-cocoa                   cco;
+    application/x-java-archive-diff       jardiff;
+    application/x-java-jnlp-file          jnlp;
+    application/x-makeself                run;
+    application/x-perl                    pl pm;
+    application/x-pilot                   prc pdb;
+    application/x-rar-compressed          rar;
+    application/x-redhat-package-manager  rpm;
+    application/x-sea                     sea;
+    application/x-shockwave-flash         swf;
+    application/x-stuffit                 sit;
+    application/x-tcl                     tcl tk;
+    application/x-x509-ca-cert            der pem crt;
+    application/x-xpinstall               xpi;
+    application/xhtml+xml                 xhtml;
+    application/xspf+xml                  xspf;
+    application/zip                       zip;
+
+    application/octet-stream              bin exe dll;
+    application/octet-stream              deb;
+    application/octet-stream              dmg;
+    application/octet-stream              iso img;
+    application/octet-stream              msi msp msm;
+
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document    docx;
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet          xlsx;
+    application/vnd.openxmlformats-officedocument.presentationml.presentation  pptx;
+
+    audio/midi                            mid midi kar;
+    audio/mpeg                            mp3;
+    audio/ogg                             ogg;
+    audio/x-m4a                           m4a;
+    audio/x-realaudio                     ra;
+
+    video/3gpp                            3gpp 3gp;
+    video/mp2t                            ts;
+    video/mp4                             mp4;
+    video/mpeg                            mpeg mpg;
+    video/quicktime                       mov;
+    video/webm                            webm;
+    video/x-flv                           flv;
+    video/x-m4v                           m4v;
+    video/x-mng                           mng;
+    video/x-ms-asf                        asx asf;
+    video/x-ms-wmv                        wmv;
+    video/x-msvideo                       avi;
+}
+
+# configuration file /etc/nginx/sites-enabled/bit-habit.com.conf:
+server {
+  listen 80;
+  listen [::]:80;
+  server_name bit-habit.com www.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+  return 301 https://bit-habit.com$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  resolver 1.1.1.1 8.8.8.8 valid=300s;
+  resolver_timeout 5s;
+
+  root /var/www/html;
+  index index.html;
+
+  location = /.well-known/acme-challenge/ { root /var/www/html; }
+
+  location = /nginx_status {
+    stub_status;
+    access_log off;
+    allow 127.0.0.1;
+    allow ::1;
+    deny all;
+  }
+
+  location /habit/ {
+    alias /var/www/habit/;
+    try_files $uri $uri/ =404;
+  }
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name www.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  return 301 https://bit-habit.com$request_uri;
+}
+
+# configuration file /etc/nginx/snippets/security-headers.conf:
+add_header X-Frame-Options "DENY" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+# configuration file /etc/nginx/snippets/security-block.conf:
+location ~ /\.(env|git|svn|htaccess)$ {
+    deny all;
+    return 404;
+}
+
+location ~* /wp-(admin|includes|content)/ {
+    deny all;
+    return 404;
+}
+
+location ~* /(cgi-bin|\.\./) {
+    deny all;
+    return 404;
+}
+
+location = /favicon.ico {
+    access_log off;
+    log_not_found off;
+    return 204;
+}
+
+location = /robots.txt {
+    access_log off;
+    try_files /robots.txt =404;
+}
+
+# configuration file /etc/nginx/snippets/rate-limit.conf:
+limit_req zone=rl_general burst=20 nodelay;
+
+# configuration file /etc/nginx/snippets/security-headers-ssl.conf:
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+# configuration file /etc/letsencrypt/options-ssl-nginx.conf:
+# This file contains important security parameters. If you modify this file
+# manually, Certbot will be unable to automatically provide future security
+# updates. Instead, Certbot will print and log an error message with a path to
+# the up-to-date file that you will need to refer to when manually updating
+# this file.
+
+ssl_session_cache shared:le_nginx_SSL:10m;
+ssl_session_timeout 1440m;
+ssl_session_tickets off;
+
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers off;
+
+ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA";
+
+# configuration file /etc/nginx/sites-enabled/blog.bit-habit.com.conf:
+server {
+  listen 80;
+  listen [::]:80;
+  server_name blog.bit-habit.com www.blog.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+  return 301 https://blog.bit-habit.com$request_uri;
+}
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name blog.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  resolver 1.1.1.1 8.8.8.8 valid=300s;
+  resolver_timeout 5s;
+
+  location / {
+    proxy_pass http://127.0.0.1:2368;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_connect_timeout 120s;
+    proxy_read_timeout 120s;
+    proxy_send_timeout 120s;
+  }
+}
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name www.blog.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  return 301 https://blog.bit-habit.com$request_uri;
+}
+
+# configuration file /etc/nginx/sites-enabled/booktoss.bit-habit.com.conf:
+server {
+    listen 80;
+    listen [::]:80;
+    server_name booktoss.bit-habit.com;
+    include /etc/nginx/snippets/security-headers.conf;
+    include /etc/nginx/snippets/security-block.conf;
+    include /etc/nginx/snippets/rate-limit.conf;
+
+    location /.well-known/acme-challenge/ {
+        alias /var/www/certbot/.well-known/acme-challenge/;
+        try_files $uri =404;
+    }
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name booktoss.bit-habit.com;
+    include /etc/nginx/snippets/security-headers.conf;
+    include /etc/nginx/snippets/security-headers-ssl.conf;
+    include /etc/nginx/snippets/security-block.conf;
+    include /etc/nginx/snippets/rate-limit.conf;
+
+    client_max_body_size 50m;
+
+    ssl_certificate /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # Proxy to Booktoss App (Port 8501)
+    location / {
+        proxy_pass http://127.0.0.1:8501;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+    }
+}
+
+# configuration file /etc/nginx/sites-enabled/code-server.conf:
+server {
+    listen 80;
+    listen [::]:80;
+    server_name code-server.bit-habit.com;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name code-server.bit-habit.com;
+
+    ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+    ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+    ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/chain.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 8.8.8.8 valid=300s;
+    resolver_timeout 5s;
+
+    include /etc/nginx/snippets/security-headers.conf;
+    include /etc/nginx/snippets/security-block.conf;
+    include /etc/nginx/snippets/rate-limit.conf;
+
+    # 업로드 사이즈 등 필요시 조정
+    client_max_body_size 64m;
+
+    location / {
+        proxy_pass http://127.0.0.1:8081/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Host $host;
+        proxy_read_timeout 60s;
+    }
+}
+
+# configuration file /etc/nginx/sites-enabled/daily-seongsu.bit-habit.com.conf:
+server {
+    listen 80;
+    server_name daily-seongsu.bit-habit.com;
+
+    # Redirect HTTP to HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name daily-seongsu.bit-habit.com;
+
+    # SSL Certificates (Assumed Wildcard)
+    # Adjust paths as necessary
+    ssl_certificate /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    # Proxy to Streamlit App
+    location / {
+        proxy_pass http://localhost:7860;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# configuration file /etc/nginx/sites-enabled/habit.bit-habit.com.conf:
+server {
+  listen 80;
+  listen [::]:80;
+  server_name habit.bit-habit.com;
+  return 301 https://habit.bit-habit.com$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name habit.bit-habit.com;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  root /home/ubuntu/workspace/bithabit_flutter/build/web;
+  index index.html;
+
+  # API 프록시 (FastAPI)
+  location /api/ {
+    proxy_pass http://127.0.0.1:8000/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_read_timeout 86400;
+    client_max_body_size 50M;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+  }
+}
+
+# configuration file /etc/nginx/sites-enabled/startpage.bit-habit.com.conf:
+server {
+  listen 80;
+  listen [::]:80;
+  server_name startpage.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+  return 301 https://startpage.bit-habit.com$request_uri;
+}
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name startpage.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  resolver 1.1.1.1 8.8.8.8 valid=300s;
+  resolver_timeout 5s;
+
+  location / {
+    proxy_pass http://127.0.0.1:8000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}
+
+# configuration file /etc/nginx/sites-enabled/status.bit-habit.com.conf:
+server {
+    listen 80;
+    listen [::]:80;
+    server_name status.bit-habit.com;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name status.bit-habit.com;
+
+    ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+    ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+    ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/chain.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 8.8.8.8 valid=300s;
+    resolver_timeout 5s;
+
+    include /etc/nginx/snippets/security-headers.conf;
+    include /etc/nginx/snippets/security-block.conf;
+    include /etc/nginx/snippets/rate-limit.conf;
+
+    auth_basic "status";
+    auth_basic_user_file /etc/nginx/.htpasswd-status;
+
+    root /var/www/status;
+    index index.shtml;
+
+    access_log /var/log/nginx/status.bit-habit.com.access.log;
+
+    location = /nginx_status {
+        stub_status;
+        access_log off;
+    }
+
+    location = /last_ips {
+        alias /var/www/status/last_ips.txt;
+        default_type text/plain;
+    }
+
+    location / {
+        ssi on;
+        add_header Cache-Control "no-store";
+        try_files /index.shtml =404;
+    }
+}
+
+# configuration file /etc/nginx/sites-enabled/viz.bit-habit.com.conf:
+server {
+    listen 80;
+    server_name viz.bit-habit.com;
+
+    # Redirect HTTP to HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name viz.bit-habit.com;
+
+    # SSL Certificates (Wildcard)
+    ssl_certificate /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    # Proxy to Linear Algebra Visualization (Port 8503)
+    location / {
+        proxy_pass http://localhost:8503;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# configuration file /etc/nginx/sites-enabled/wiki.bit-habit.com.conf:
+server {
+  listen 80;
+  listen [::]:80;
+  server_name wiki.bit-habit.com www.wiki.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+  return 301 https://wiki.bit-habit.com$request_uri;
+}
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name wiki.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  resolver 1.1.1.1 8.8.8.8 valid=300s;
+  resolver_timeout 5s;
+
+  location / {
+    proxy_pass http://127.0.0.1:3001;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name www.wiki.bit-habit.com;
+  include /etc/nginx/snippets/security-headers.conf;
+  include /etc/nginx/snippets/security-headers-ssl.conf;
+  include /etc/nginx/snippets/security-block.conf;
+  include /etc/nginx/snippets/rate-limit.conf;
+
+  ssl_certificate           /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  ssl_certificate_key       /etc/letsencrypt/live/bit-habit.com-0001/privkey.pem;
+  ssl_trusted_certificate   /etc/letsencrypt/live/bit-habit.com-0001/fullchain.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  return 301 https://wiki.bit-habit.com$request_uri;
+}
+

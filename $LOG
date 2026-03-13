@@ -1,0 +1,36 @@
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/requests_toolbelt/_compat.py", line 49, in <module>
+    from requests.packages.urllib3.contrib import appengine as gaecontrib
+ImportError: cannot import name 'appengine' from 'requests.packages.urllib3.contrib' (/home/ubuntu/.local/lib/python3.8/site-packages/urllib3/contrib/__init__.py)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/bin/certbot", line 11, in <module>
+    load_entry_point('certbot==0.40.0', 'console_scripts', 'certbot')()
+  File "/usr/lib/python3/dist-packages/pkg_resources/__init__.py", line 490, in load_entry_point
+    return get_distribution(dist).load_entry_point(group, name)
+  File "/usr/lib/python3/dist-packages/pkg_resources/__init__.py", line 2854, in load_entry_point
+    return ep.load()
+  File "/usr/lib/python3/dist-packages/pkg_resources/__init__.py", line 2445, in load
+    return self.resolve()
+  File "/usr/lib/python3/dist-packages/pkg_resources/__init__.py", line 2451, in resolve
+    module = __import__(self.module_name, fromlist=['__name__'], level=0)
+  File "/usr/lib/python3/dist-packages/certbot/main.py", line 20, in <module>
+    from certbot import client
+  File "/usr/lib/python3/dist-packages/certbot/client.py", line 14, in <module>
+    from acme import client as acme_client
+  File "/usr/lib/python3/dist-packages/acme/client.py", line 16, in <module>
+    from requests_toolbelt.adapters.source import SourceAddressAdapter
+  File "/usr/lib/python3/dist-packages/requests_toolbelt/__init__.py", line 12, in <module>
+    from .adapters import SSLAdapter, SourceAddressAdapter
+  File "/usr/lib/python3/dist-packages/requests_toolbelt/adapters/__init__.py", line 12, in <module>
+    from .ssl import SSLAdapter
+  File "/usr/lib/python3/dist-packages/requests_toolbelt/adapters/ssl.py", line 16, in <module>
+    from .._compat import poolmanager
+  File "/usr/lib/python3/dist-packages/requests_toolbelt/_compat.py", line 51, in <module>
+    from urllib3.contrib import appengine as gaecontrib
+ImportError: cannot import name 'appengine' from 'urllib3.contrib' (/home/ubuntu/.local/lib/python3.8/site-packages/urllib3/contrib/__init__.py)
+error: no objects passed to apply
+deployment.apps/traefik restarted
+[$(date)] TLS renewal completed.
